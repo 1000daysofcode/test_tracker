@@ -61,10 +61,25 @@ def org_test():
 # Type 'QUIT NOW' at any time to quit program. Confirmation y/n
 
 
-lst = ['ielts',['Test 1',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 2',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 3',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 4',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]]]
+lst = [['ielts',['Test 1',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 2',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 3',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 4',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]]],['test',['test']]]
 
-print(lst[0])
-for i in lst[1]:
-    print(i[:-1])
-    for j in i[-1:]:
-        print(j)
+# dct = {'ielts':{'Test 1':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}},'Test 2':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}},'Test 3':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}}'Test 4':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}}
+
+
+dct = {'ielts':{'test 1':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 2':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 3':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 4':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}}},'toefl':'nada'}
+
+# print(lst[0][1][1][1][1][0])
+
+print(dct['ielts']['test 3']['writing']['part 3'][1])
+print(dct['toefl'])
+
+print(lst[0][0])
+for i in lst[0][1]:
+    print(i[0])
+    for j in i[1]:
+        print(j[0])
+        # for k in j[1]:
+        #     print(k)
+
+
+        
