@@ -9,12 +9,12 @@ cName = input('\n\nPlease enter the name of the class: ')
 
 # Initialize test max score variable
 maxScore = 0
+numLevels = 0
+subSize = []
 
 # AssembleTest
 def org_test():       
     levelCheck = True
-    numLevels = 0
-
     # Check number of subfolders needed by asking:
         # "Is this divided into parts?" 
         # Y = name part, specify number of parts, 
@@ -22,12 +22,25 @@ def org_test():
     while levelCheck == True:
         moreLevels = input('Is this divided into parts? y/n')
         if moreLevels == 'y'.lower():
-            # Call folder iterator
-            pass
+            if numLevels > 3:
+                print("You've reached the maximum number of subsections")
+                levelCheck = False
+            else:
+                get_subSize = input('How many parts?')
+                for count, i in enumerate(range(get_subSize)):
+                    subName = input('Please enter the section name: ')
+                    subSize.append([count,subName])
+                numLevels += 1
+                continue
         elif moreLevels == 'n'.lower():
-            break
+            levelCheck = False
         else:
             continue
+
+org_test()
+
+for i in range(numLevels):
+
     
 
 
@@ -60,26 +73,12 @@ def org_test():
 
 # Type 'QUIT NOW' at any time to quit program. Confirmation y/n
 
-
-lst = [['ielts',['Test 1',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 2',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 3',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]],['Test 4',['reading',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a'],'part 4',[0,'n/a']]],['writing',['part 1',[0,'n/a'],'part 2',[0,'n/a'],'part 3',[0,'n/a']]]]],['test',['test']]]
-
-# dct = {'ielts':{'Test 1':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}},'Test 2':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}},'Test 3':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}}'Test 4':{'reading':{'part 1':[0,'n/a'],'part 2':[0,'n/a']:'part 3':[0,'n/a'],'part 4':[0,'n/a']},'writing':{'part 1':[0,'n/a'],'part 2':[0,'n/a'],'part 3':[0,'n/a']}}
-
-
 dct = {'ielts':{'test 1':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 2':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 3':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 4':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}}},'toefl':'nada'}
-
-# print(lst[0][1][1][1][1][0])
 
 print(dct['ielts']['test 3']['writing']['part 3'][1])
 print(dct['toefl'])
 
-print(lst[0][0])
-for i in lst[0][1]:
-    print(i[0])
-    for j in i[1]:
-        print(j[0])
-        # for k in j[1]:
-        #     print(k)
+
 
 
         
