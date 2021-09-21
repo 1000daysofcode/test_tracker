@@ -8,6 +8,7 @@ def builddict():
     sectCount2 = 0
     sectCount3 = 0
     subfold1 = []
+    
     subfold2 = []
     subfold3 = []
     dict1 = {}
