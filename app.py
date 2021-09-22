@@ -63,37 +63,3 @@ print(test_db)
 # print(dct['ielts']['test 3']['writing']['part 3'][1])
 # print(dct['toefl'])
 
-from choose_test import make_test_shell as make_test
-
-test_raw = [{'IELTS': {'Test 1': {'Reading': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, ''], 'Part 4': [0, '']}, 'Writing': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, '']}}}}]
-test_db = [{}]
-test_index = [{'name':'IELTS','location':0}]
-            
-dict, levels = make_test()
-print('\nTest created. Please see below:')
-print('\n-----------------\n\nNumber of levels: 2\n\nDictionary:\n{things:stuff}\n')
-
-for i in test_index:
-    print(f'Test structure: {i["name"]}\nTest location: {i["location"]+1}\n-')
-test_choice = int(input('Please enter the location of your test'))-1
-
-view = input('To see the test structure, press S.\nTo see your test results, press R')
-if view == 's':
-    print(test_raw[test_choice])
-else:
-    print(test_db[test_choice])
-print(test_db)
-
-{'IELTS': {'Test 1': {'Reading': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, ''], 'Part 4': [0, '']}, 'Writing': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, '']}}}}
-
-for title in dict:
-    titlekey = title.keys()
-    print(titlekey)
-    for i in dict[titlekey].keys():
-        if 'score' in 
-    for sect_1 in i[key]:
-        print name key
-        for j in i[j[name]]:
-            print name key, end=''
-            for k in j[k[parent]]:
-                print k[name]: Score: [k[score][0]] Mistakes: k[score][1]
