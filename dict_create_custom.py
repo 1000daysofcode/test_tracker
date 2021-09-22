@@ -1,4 +1,4 @@
-def builddict():
+def builddict(testname):
     moreLevels = 'undefined'
     nextlevel = False
     proceed_num = 0
@@ -8,7 +8,6 @@ def builddict():
     sectCount2 = 0
     sectCount3 = 0
     subfold1 = []
-    
     subfold2 = []
     subfold3 = []
     dict1 = {}
@@ -84,7 +83,7 @@ def builddict():
                             print('\n=================================\n| That is not a valid response. |\n=================================')
                             continue
             else:
-                dict = {'test_name':[0,'mistakes']}
+                dict = {testname:[0,'mistakes']}
                 return dict, numLevels
 
             # If yes, continue building subfolders, if no process dict
@@ -159,22 +158,25 @@ def builddict():
                                     continue
                                 else:
                                     break
-                            subfold3.append([sectCount3, subName3])
-                for layer3 in subfold3:
-                    if isinstance(layer3, list) != True:
-                        dict3.update(layer3)
-                    else:
-                        dict3.update({layer3[1]:[0, '']})
-                for layer2 in subfold2:
+                            subfold3.append([{subName3:[0, '']}])
+                for dict in subfold3:
+                    dict3.update(dict)
+                for dict in subfold2:
                     if isinstance(layer2, list) != True:
                         dict2.update(layer2)
                     else:
-                        dict2.update({layer2[1]:dict3})
-                for layer1 in subfold1:
+                        if count <= layer2[0]:
+                            dict2.update({layer2[1]:dict3})
+                        else:
+                            break
+                for count, layer1 in enumerate(subfold1):
                     if isinstance(layer1, list) != True:
                         dict1.update(layer1)
                     else:
-                        dict1.update({layer1[1]:dict2})
+                        if count <= layer1[0]:
+                            dict1.update({layer1[1]:dict2})
+                        else:
+                            break
                 return dict1, numLevels
             else:
                 for layer2 in subfold2:
@@ -183,16 +185,16 @@ def builddict():
                     else:
                         dict2.update({layer2[1]:[0, '']})
                 for layer1 in subfold1:
-                    if isinstance(layer1[1], list) != True:
+                    if isinstance(layer1, list) != True:
                         dict1.update(layer1)
                     else:
                         dict2.update({layer1[1]:dict2})
                 return dict1, numLevels
         elif moreLevels == 'n':
-            dict = {'test_name':[0,'mistakes']}
+            dict = {testname:[0,'mistakes']}
             return dict, numLevels
         else:
             continue #enclose in loop to force at least 1 y/n answer
 
-dict, levels = builddict()
+dict, levels = builddict('IELTS')
 print(f'\n-----------------\n\nNumber of levels: {levels}\n\nDictionary:\n\n{dict}\n')
