@@ -2,14 +2,14 @@ from choose_test import make_test_shell as make_test
 
 test_raw = [{'IELTS': {'Test 1': {'Reading': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, ''], 'Part 4': [0, '']}, 'Writing': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, '']}}}}]
 test_db = [{}]
-test_index = [{'name':'IELTS','location':0}]
+test_index = [{'name':'IELTS'}]
             
 dict, levels = make_test()
 print('\nTest created. Please see below:')
 print('\n-----------------\n\nNumber of levels: 2\n\nDictionary:\n{things:stuff}\n')
 
-for i in test_index:
-    print(f'Test structure: {i["name"]}\nTest location: {i["location"]+1}\n-')
+for c, i in enumerate(test_index):
+    print(f'Test structure: {i["name"]}\nTest location: {c+1}\n-')
 test_choice = int(input('Please enter the location of your test'))-1
 
 view = input('To see the test structure, press S.\nTo see your test results, press R')
