@@ -1,19 +1,15 @@
-def builddict():
+def builddict(testname):
     moreLevels = 'undefined'
-    nextlevel = False
     proceed_num = 0
     maxScore = 0
     numLevels = 0
     sectCount1 = 0
     sectCount2 = 0
-    sectCount3 = 0
     subfold1 = []
-    
     subfold2 = []
     subfold3 = []
     dict1 = {}
-    dict2 = {}
-    dict3 = {}
+
     while moreLevels != False and moreLevels[0] != 'n':
         if moreLevels == 'undefined':
             while True:
@@ -69,10 +65,10 @@ def builddict():
                                     except ValueError:
                                         print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
                                         continue
-                                subfold1.append([sectCount1, subName1])
+                                subfold1.append({'name':subName1, 'count':sectCount1})
                                 break
                             elif moreLevels[0] == 'n':
-                                subfold1.append({subName1:[0, '']})
+                                subfold1.append({'name':subName1, 'score':[0, '']})
                                 break
                             elif isinstance(moreLevels, str) == False:
                                 print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -84,8 +80,8 @@ def builddict():
                             print('\n=================================\n| That is not a valid response. |\n=================================')
                             continue
             else:
-                dict = {'test_name':[0,'mistakes']}
-                return dict, numLevels
+                test = {testname:[0, 'Mistakes']}
+                return test, numLevels
 
             # If yes, continue building subfolders, if no process dict
             if proceed_num > 0:
@@ -93,11 +89,11 @@ def builddict():
                 numLevels += 1
                 # get_subSize2 = int(input('How many identical parts? '))
                 for i in subfold1:
-                    if isinstance(i, list) != True:
+                    if 'score' in i.keys():
                         continue
                     else:     
-                        print(f'\nPlease enter the names for section "{i[1]}"\n-----------------')
-                        for j in range(i[0]):
+                        print(f'\nPlease enter the names for section "{i["name"]}"\n-----------------')
+                        for j in range(i['count']):
                             while True:
                                 subName2 = input(f'Please enter the section name for section {j+1}: ')
                                 if len(subName2) > 20 or len(subName2) <= 2:
@@ -122,10 +118,10 @@ def builddict():
                                             except ValueError:
                                                 print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
                                                 continue
-                                        subfold2.append([sectCount2, subName2])
+                                        subfold2.append({'parent':i['name'], 'name':subName2, 'count':sectCount2}) 
                                         break
                                     elif moreLevels[0] == 'n':
-                                        subfold2.append({subName2:[0, '']})
+                                        subfold2.append({'parent':i['name'], 'name':subName2, 'score':[0, '']}) 
                                         break
                                     elif isinstance(moreLevels, str) == False:
                                         print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -138,20 +134,21 @@ def builddict():
                                     continue
                             # subfold2.append([sectCount2, subName2])           
             else:
-                for layer1 in subfold1:
-                    dict1.update(layer1)
-                return dict1, numLevels
+                for layer in subfold1:
+                    dict1.update({layer['name']:layer['score']})
+                test = {testname:dict1}
+                return test, numLevels
             
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1
                 # get_subSize3 = int(input('How many identical parts? '))
                 for i in subfold2:
-                    if isinstance(i, list) != True:
+                    if 'score' in i.keys():
                         continue
                     else:     
-                        print(f'\nPlease enter the names for section "{i[1]}"\n-----------------')
-                        for j in range(i[0]):
+                        print(f'\nPlease enter the names for section "{i["name"]}"\n-----------------')
+                        for j in range(i['count']):
                             while True:
                                 subName3 = input(f'Please enter the section name for section {j+1}: ')
                                 if len(subName3) > 20 or len(subName3) <= 2:
@@ -159,40 +156,55 @@ def builddict():
                                     continue
                                 else:
                                     break
-                            subfold3.append([sectCount3, subName3])
-                for layer3 in subfold3:
-                    if isinstance(layer3, list) != True:
-                        dict3.update(layer3)
+                            subfold3.append({'parent':i['name'], 'name':subName3, 'score':[0, '']})
+                for prim_f in subfold1:
+                    if 'score' not in prim_f.keys():
+                        dict2 = {}
+                        for sec_f in subfold2:
+                            if 'score' not in sec_f.keys():
+                                if sec_f['parent'] == prim_f['name']:
+                                    dict3 = {}
+                                    for ter_f in subfold3:
+                                        if ter_f['parent'] == sec_f['name']:
+                                            dict3.update({ter_f['name']:ter_f['score']})
+                                        else:
+                                            continue
+                                    dict2.update({sec_f['name']:dict3})
+                                else:
+                                    continue
+                            elif sec_f['parent'] == prim_f['name']:
+                                dict2.update({sec_f['name']:sec_f['score']})
+                            else:
+                                continue
+                        dict1.update({prim_f['name']:dict2})
                     else:
-                        dict3.update({layer3[1]:[0, '']})
-                for layer2 in subfold2:
-                    if isinstance(layer2, list) != True:
-                        dict2.update(layer2)
-                    else:
-                        dict2.update({layer2[1]:dict3})
-                for layer1 in subfold1:
-                    if isinstance(layer1, list) != True:
-                        dict1.update(layer1)
-                    else:
-                        dict1.update({layer1[1]:dict2})
-                return dict1, numLevels
+                        dict1.update({prim_f['name']:prim_f['score']})
+                test = {testname:dict1}
+                return test, numLevels
             else:
-                for layer2 in subfold2:
-                    if isinstance(layer2, list) != True:
-                        dict2.update(layer2)
+                for prim_f in subfold1:
+                    if 'score' not in prim_f.keys():
+                        dict2 = {}
+                        for sec_f in subfold2:
+                            if sec_f['parent'] == prim_f['name']:
+                                dict2.update({sec_f['name']:sec_f['score']})
+                            else:
+                                continue
+                        dict1.update({prim_f['name']:dict2})
                     else:
-                        dict2.update({layer2[1]:[0, '']})
-                for layer1 in subfold1:
-                    if isinstance(layer1[1], list) != True:
-                        dict1.update(layer1)
-                    else:
-                        dict2.update({layer1[1]:dict2})
-                return dict1, numLevels
+                        dict1.update({prim_f['name']:prim_f['score']})
+                test = {testname:dict1}
+                return test, numLevels
+                
+                # test = {testname:dict1}
+                # return test, numLevels
+
         elif moreLevels == 'n':
-            dict = {'test_name':[0,'mistakes']}
-            return dict, numLevels
+            dict = {testname:[0,'mistakes']}
+            test = {testname:dict}
+            return test, numLevels
         else:
             continue #enclose in loop to force at least 1 y/n answer
 
-dict, levels = builddict()
+dict, levels = builddict('IELTS')
 print(f'\n-----------------\n\nNumber of levels: {levels}\n\nDictionary:\n\n{dict}\n')
