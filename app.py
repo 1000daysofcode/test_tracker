@@ -1,16 +1,31 @@
 def main():
     choice = 'undefined'
     # Greet user
-    print('-----------------\n\nWelcome to Test Tracker version 0!')
+    print('''-----------------
+
+
+
+  ______          __     ______                __            
+ /_  __/__  _____/ /_   /_  __/________ ______/ /_____  _____
+  / / / _ \/ ___/ __/    / / / ___/ __ `/ ___/ //_/ _ \/ ___/
+ / / /  __(__  ) /_     / / / /  / /_/ / /__/ ,< /  __/ /    
+/_/  \___/____/\__/    /_/ /_/   \__,_/\___/_/|_|\___/_/ 
+                                            ____
+     _   _____  __________(_)___  ____     / __ \                
+    | | / / _ \/ ___/ ___/ / __ \/ __ \   / / / /                
+    | |/ /  __/ /  (__  ) / /_/ / / / /  / /_/ /                 
+    |___/\___/_/  /____/_/\____/_/ /_/   \____/                  
+                                                     
+''')
 
     # Ask for name (add to variable)
-    name = input('\n\nPlease enter your name: ')
+    name = input('\n\nWelcome to Test Tracker! Please enter your name: ')
     print(f'\nWelcome, {name}!\n\nPlease create at least one test structure to continue.')
 
     # Initialize data structures
-    test_raw = []
+    test_raw = [1]
     test_db = []
-    test_index = [{'name':'IELTS'}]
+    test_index = [{'name':'IELTS', 'mistakes': ''}]
 
     while choice != False and choice[0] != 'q':
         if choice == 'undefined':
@@ -40,7 +55,61 @@ Enter an option: ''')).lower().strip()
                     print('\n=================================\n| That is not a valid response. |\n=================================')
                     continue
             if choice[0] == 'v':
-                print('\nYou chose to view your scores.\n')
+                if len(test_db) < 1:
+                    print(f'\n====================================================\n| Please submit a new test score in order to view. |\n====================================================')
+                else:
+                    print('\nHere are your test names and locations:\n')
+                    for c, i in enumerate(test_index):
+                        print(f'Test structure: {i["name"]} || Test location: {c+1}')
+                    while True:
+                        try:
+                            test_choice = int(input('---\n\nPlease enter the location of your tests: '))-1
+                            if test_choice > len(test_index) or test_choice < 0:
+                                print(f'\n==================================\n| Please enter a number up to {len(test_index)}. |\n==================================')
+                                continue
+                            else:
+                                break
+                        except:
+                            print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================')
+                            continue
+                    tests = test_db[test_choice]
+                    print(f'Below are all test results for test {test_index[test_choice-1]}:\n\n================')
+                    for c, dct in enumerate(tests):
+                        for title, v in dct.items():
+                                print(f'{c+1}) Test Name: {title}\n----------------') 
+                                if isinstance(v, dict) != True:
+                                    test = v
+                                    if isinstance(test, list) == True:
+                                        print(f'\tScore: {v[0]} out of: {v[1]} || Mistakes: {v[2]}')
+                                    else:
+                                        print()
+                                        pass
+                                else:
+                                    for layer1, v1 in dct[title].items():
+                                        print(f'{layer1}')
+                                        if isinstance(dct[title][layer1], dict) != True:
+                                            test = v1
+                                            if isinstance(test, list) == True:
+                                                print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
+                                            else:
+                                                print(f'{layer1}') 
+                                        else:
+                                            for layer2, v2 in dct[title][layer1].items():
+                                                print(f'{layer2} : ')
+                                                if isinstance(dct[title][layer1][layer2], dict) != True:
+                                                    test = v2
+                                                    if isinstance(test, list) == True:
+                                                        print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
+                                                    else:
+                                                        print(layer2 + " : " + str(dct[title][layer1][layer2]))
+                                                else:
+                                                    for layer3, v3 in dct[title][layer1][layer2].items():
+                                                        print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
+                                        print('----------------') 
+                                print('\n\n================')  
+                        while True:
+                            input('\nYour tests are above.\n\nPress enter to continue. \n\n----------------\n')
+                            break     
                 choice = 'undefined'
                 continue
             elif choice[0] == 'a':
@@ -55,16 +124,16 @@ Enter an option: ''')).lower().strip()
                 print('\nYou chose to create a new test structure.\n')
                 testname, dct, total, levels = make_test_shell()
                 test_raw.append(dct)
-                test_index.append({'name':testname, 'maxscore':total})
-                print(f'\nTest "{testname}" created. Please see below:\n\nTest name: {testname}')
+                test_index.append({'name':testname, 'maxscore':total, 'mistakes':make_mlist()})
+                print(f'\nTest "{testname}" created. Please see below:')
                 for title, v in dct.items():
-                    print(f'\nTest Name: {title}\n----------------') 
+                    print(f'\n{title}\n---') 
                     if isinstance(v, dict) != True:
                         test = v
                         if isinstance(test, list) == True:
                             print(f'\tScore: {v[0]} out of: {v[1]} || Mistakes: {v[2]}')
                         else:
-                            print()
+                            print('ERROR. PLEASE CONTACT DESIGNER')
                             pass
                     else:
                         for layer1, v1 in dct[title].items():
@@ -88,11 +157,24 @@ Enter an option: ''')).lower().strip()
                                         for layer3, v3 in dct[title][layer1][layer2].items():
                                             print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
                             print('----------------')
+                while True:
+                    input('Press enter to continue. \n\n----------------\n')
+                    break
                 # print(type(dict_s))
                 choice = 'undefined'
                 continue
             else:
-                print('\nThank you for using Test Tracker version 0! Goodbye\n')
+                print('''
+Thank you for using Test Tracker version 0!
+
+   ______                ____               __
+  / ____/___  ____  ____/ / /_  __  _____  / /
+ / / __/ __ \/ __ \/ __  / __ \/ / / / _ \/ / 
+/ /_/ / /_/ / /_/ / /_/ / /_/ / /_/ /  __/_/  
+\____/\____/\____/\__,_/_.___/\__, /\___(_)   
+                             /____/          
+                             
+''')
                 choice = False
 
     # for i in test_index:
@@ -647,5 +729,60 @@ def print_dict(dct):
                         for layer3, v3 in dct[title][layer1][layer2].items():
                             print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
             print('----------------')
+
+def make_mlist():
+    mistake_list = []
+    add_more = ''
+    quit = False
+
+    mistakes_done = False
+
+    while quit == False:
+        try:
+            add_more = input('\nWould you like to add a mistake type? Y/N ').lower().strip()
+            if add_more[0] == 'y':
+                while add_more[0] == 'y':
+                    new_mistake = input('---\nEnter the name of your mistake type: ')
+                    mistake_list.append(new_mistake)
+                    while True:
+                        try:
+                            add_more = input('---\nWould you like to add more mistakes? Y/N ').lower().strip()
+                            if add_more[0] == 'y':
+                                break
+                            elif add_more[0] == 'n':
+                                quit = True
+                                mistakes_done = True
+                                break
+                            elif isinstance(add_more, str) == False:
+                                print('\n=================================\n| That is not a valid response. |\n=================================')
+                                continue
+                            else:
+                                print('\n=================================\n| That is not a valid response. |\n=================================')
+                                continue
+                        except IndexError:
+                            print('\n=================================\n| That is not a valid response. |\n=================================')
+                            continue
+            elif add_more[0] == 'n':
+                quit = True
+                mistakes_done = False
+                break
+            elif isinstance(add_more, str) == False:
+                print('\n=================================\n| That is not a valid response. |\n=================================')
+                continue
+            else:
+                print('\n=================================\n| That is not a valid response. |\n=================================')
+                continue
+        except IndexError:
+            print('\n=================================\n| That is not a valid response. |\n=================================')
+            continue
+    print('\nThe mistakes list is: ')
+    for c, i in enumerate(mistake_list):
+        print(f'Mistake {c}: {i}')
+    print('---\n')
+    while True:
+        input('Press enter to continue. \n\n----------------\n')
+        break
+    return mistake_list
+
 
 main()
