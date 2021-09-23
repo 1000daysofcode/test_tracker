@@ -1,23 +1,76 @@
 # Import functions
+from typing import Dict
 from choose_test import make_test_shell as make_test
+from view_test import print_dict as view_dict
 
 # Greet user
-print('-----------------\n\nWelcome to Test Tracker Version 0!')
+print('-----------------\n\nWelcome to Test Tracker version 0!')
 
 # Ask for name (add to variable)
 name = input('\n\nPlease enter your name: ')
-print(f'\nWelcome, {name}!')
+print(f'\nWelcome, {name}!\n\nPlease create at least one test structure to continue.')
 
 # Initialize test max score variable
 maxScore = 0
 numLevels = 0
-test_raw = [{'IELTS': {'Test 1': {'Reading': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, ''], 'Part 4': [0, '']}, 'Writing': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, '']}}}}]
-test_db = [{}]
-test_index = [{'name':'IELTS','location':0}]
+test_raw = []
+test_db = []
+test_index = [{'name':'IELTS'}]
             
-dict, levels = make_test()
+testname, dict_s, levels = make_test()
+test_raw.append(dict_s)
+test_index.append({'name':testname})
+
 print('\nTest created. Please see below:')
-print(f'\n-----------------\n\nNumber of levels: {levels}\n\nDictionary:\n\n{dict}\n')
+view_dict(dict_s)
+
+choice = 'undefined'
+while choice != False and choice[0] != 'q':
+    if choice == 'undefined':
+        while True:
+            try:
+                choice = (input('''
+===============================================
+|                  Main Menu                  |
+-----------------------------------------------
+| View your scores ................ press 'V' |
+| View a score analysis ........... press 'A' |
+| Add a new score ................. press 'N' |
+| Create another test structure ... press 'S' |
+| Exit the program ................ press 'Q' |
+===============================================
+
+Enter an option: ''')).lower().strip()
+                if choice[0] == 'v' or choice[0] == 'a' or choice[0] == 'n' or choice[0] == 's' or choice[0] == 'q':
+                    break
+                elif isinstance(choice, str) == False:
+                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                    continue
+                else:
+                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                    continue
+            except IndexError:
+                print('\n=================================\n| That is not a valid response. |\n=================================')
+                continue
+        if choice[0] == 'v':
+            print('\nYou chose to view your scores.')
+            choice = 'undefined'
+            continue
+        elif choice[0] == 'a':
+            print('\nYou chose to view a score analysis')
+            choice = 'undefined'
+            continue
+        elif choice[0] == 'n':
+            print('\nYou chose to add a new score')
+            choice = 'undefined'
+            continue
+        elif choice[0] == 's':
+            print('\nYou chose to create a new test structure')
+            choice = 'undefined'
+            continue
+        else:
+            print('\nThank you for using Test Tracker version 0! Goodbye')
+            choice = False
 
 for i in test_index:
     print(f'Test structure: {i["name"]}\nTest location: {i["location"]+1}\n-')
@@ -30,36 +83,5 @@ else:
     print(test_db[test_choice])
 print(test_db)
 
-# Print table organized and ask user to confirm
-
-    # Here is your test organization:
-    
-    # Test Name: 'IELTS'
-    # =============================
-    # | Test 1 | Reading | Part 1 |
-    # | Test 1 | Reading | Part 2 |
-    # | Test 1 | Reading | Part 3 |
-    # | Test 1 | Reading | Part 4 |
-    # | Test 1 | Writing | Part 1 |
-    # | Test 1 | Writing | Part 2 |
-    # | Test 1 | Writing | Part 3 |
-    # =============================
-    # + 3 more tests like 'Test 1'
-
-    # Is this correct? Y/ N
-
-# Once complete, request user to input information
-
-# Once data completed, allow user 4 options:
-    # View score trends -> Type 'S'
-    # View entire test --> Type 'T'
-    # Update test score -> Type 'U'
-    # Add another test --> Type 'A'
-
 # Type 'QUIT NOW' at any time to quit program. Confirmation y/n
-
-# dct = {'ielts':{'test 1':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 2':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 3':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}},'test 4':{'reading':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a'],'part 4':[0, 'n/a']},'writing':{'part 1':[0, 'n/a'],'part 2':[0, 'n/a'],'part 3':[0, 'n/a']}}},'toefl'}
-
-# print(dct['ielts']['test 3']['writing']['part 3'][1])
-# print(dct['toefl'])
 

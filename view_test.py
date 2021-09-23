@@ -1,13 +1,3 @@
-from choose_test import make_test_shell as make_test
-
-test_raw = [{'IELTS': {'Test 1': {'Reading': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, ''], 'Part 4': [0, '']}, 'Writing': {'Part 1': [0, ''], 'Part 2': [0, ''], 'Part 3': [0, '']}}}}]
-test_db = [{}]
-test_index = [{'name':'IELTS'}]
-            
-dict, levels = make_test()
-print('\nTest created. Please see below:')
-print('\n-----------------\n\nNumber of levels: 2\n\nDictionary:\n{things:stuff}\n')
-
 for c, i in enumerate(test_index):
     print(f'Test structure: {i["name"]}\nTest location: {c+1}\n-')
 test_choice = int(input('Please enter the location of your test'))-1
@@ -27,7 +17,7 @@ def print_dict(dct):
             if isinstance(dct[title][layer1], dict) != True:
                 test = v1
                 if isinstance(test, list) == True:
-                    print(f'\tScore: {v1[0]} || Mistakes: {v1[1]}')
+                    print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
                 else:
                     print(str(dct[title][layer1])) 
             else:
@@ -36,10 +26,10 @@ def print_dict(dct):
                     if isinstance(dct[title][layer1][layer2], dict) != True:
                         test = v2
                         if isinstance(test, list) == True:
-                            print(f'\tScore: {v2[0]} || Mistakes: {v2[1]}')
+                            print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
                         else:
                             print(layer2 + " : " + str(dct[title][layer1][layer2]))
                     else:
                         for layer3, v3 in dct[title][layer1][layer2].items():
-                            print(f'\t{layer3} || Score: {v3[0]} || Mistakes: {v3[1]}')
+                            print(f'\t{layer3} || Score: {v3[0]} out of: {v2[1]} || Mistakes: {v3[2]}')
             print('----------------\n')

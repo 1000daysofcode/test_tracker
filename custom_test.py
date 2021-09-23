@@ -2,6 +2,7 @@ def build_custom_dict(testname):
     moreLevels = 'undefined'
     proceed_num = 0
     maxScore = 0
+    totalMax = 0
     numLevels = 0
     sectCount1 = 0
     sectCount2 = 0
@@ -68,7 +69,18 @@ def build_custom_dict(testname):
                                 subfold1.append({'name':subName1, 'count':sectCount1})
                                 break
                             elif moreLevels[0] == 'n':
-                                subfold1.append({'name':subName1, 'score':[0, '']})
+                                while True:
+                                    try:
+                                        maxScore = int(input(f'What is the maximum score for {subName1}? '))
+                                        totalMax += maxScore
+                                        if maxScore < 1:
+                                            print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                            continue
+                                        else:
+                                            break
+                                    except ValueError:
+                                        print('\n=============================\n| Please enter only digits. |\n=============================')
+                                subfold1.append({'name':subName1, 'score':[0, maxScore, '']})
                                 break
                             elif isinstance(moreLevels, str) == False:
                                 print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -80,8 +92,19 @@ def build_custom_dict(testname):
                             print('\n=================================\n| That is not a valid response. |\n=================================')
                             continue
             else:
-                test = {testname:[0, 'Mistakes']}
-                return test, numLevels
+                while True:
+                    try:
+                        maxScore = int(input(f'What is the maximum score for {testname}? '))
+                        totalMax += maxScore
+                        if maxScore < 1:
+                            print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                            continue
+                        else:
+                            break
+                    except ValueError:
+                        print('\n=============================\n| Please enter only digits. |\n=============================')
+                test = {testname:[0, maxScore, 'Mistakes']}
+                return testname, test, totalMax, numLevels
 
             # If yes, continue building subfolders, if no process dict
             if proceed_num > 0:
@@ -121,7 +144,18 @@ def build_custom_dict(testname):
                                         subfold2.append({'parent':i['name'], 'name':subName2, 'count':sectCount2}) 
                                         break
                                     elif moreLevels[0] == 'n':
-                                        subfold2.append({'parent':i['name'], 'name':subName2, 'score':[0, '']}) 
+                                        while True:
+                                            try:
+                                                maxScore = int(input(f'What is the maximum score for {subName2}? '))
+                                                totalMax += maxScore
+                                                if maxScore < 1:
+                                                    print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                                    continue
+                                                else:
+                                                    break
+                                            except ValueError:
+                                                print('\n=============================\n| Please enter only digits. |\n=============================')
+                                        subfold2.append({'parent':i['name'], 'name':subName2, 'score':[0, maxScore, '']}) 
                                         break
                                     elif isinstance(moreLevels, str) == False:
                                         print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -137,7 +171,7 @@ def build_custom_dict(testname):
                 for layer in subfold1:
                     dict1.update({layer['name']:layer['score']})
                 test = {testname:dict1}
-                return test, numLevels
+                return testname, test, totalMax, numLevels
             
             if proceed_num > 0:
                 proceed_num = 0
@@ -156,7 +190,18 @@ def build_custom_dict(testname):
                                     continue
                                 else:
                                     break
-                            subfold3.append({'parent':i['name'], 'name':subName3, 'score':[0, '']})
+                            while True:
+                                try:
+                                    maxScore = int(input(f'What is the maximum score for {subName3}? '))
+                                    totalMax += maxScore
+                                    if maxScore < 1:
+                                        print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                        continue
+                                    else:
+                                        break
+                                except ValueError:
+                                    print('\n=============================\n| Please enter only digits. |\n=============================')
+                            subfold3.append({'parent':i['name'], 'name':subName3, 'score':[0, maxScore, '']})
                 for prim_f in subfold1:
                     if 'score' not in prim_f.keys():
                         dict2 = {}
@@ -180,7 +225,7 @@ def build_custom_dict(testname):
                     else:
                         dict1.update({prim_f['name']:prim_f['score']})
                 test = {testname:dict1}
-                return test, numLevels
+                return testname, test, totalMax, numLevels
             else:
                 for prim_f in subfold1:
                     if 'score' not in prim_f.keys():
@@ -194,7 +239,7 @@ def build_custom_dict(testname):
                     else:
                         dict1.update({prim_f['name']:prim_f['score']})
                 test = {testname:dict1}
-                return test, numLevels
+                return testname, test, totalMax, numLevels
                 
                 # test = {testname:dict1}
                 # return test, numLevels
@@ -202,9 +247,9 @@ def build_custom_dict(testname):
         elif moreLevels == 'n':
             dict = {testname:[0,'mistakes']}
             test = {testname:dict}
-            return test, numLevels
+            return testname, test, totalMax, numLevels
         else:
             continue #enclose in loop to force at least 1 y/n answer
 
-# dict, levels = build_custom_dict('IELTS')
-# print(f'\n-----------------\n\nNumber of levels: {levels}\n\nDictionary:\n\n{dict}\n')
+name, dict, total, levels = build_custom_dict('IELTS')
+print(f'\n-----------------\n\nNumber of levels: {levels}\n{name} (Maximum possible: {total}):\n\n{dict}\n')

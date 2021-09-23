@@ -1,6 +1,7 @@
 def build_simple_dict(testname):
     moreLevels = 'undefined'    
     maxScore = 0
+    totalMax = 0
     numLevels = 0
     subfold1 = []
     subfold2 = []
@@ -66,8 +67,19 @@ def build_simple_dict(testname):
                         print('\n=================================\n| That is not a valid response. |\n=================================')
                         continue
             else:
-                dict = {testname:[0,'mistakes']}
-                return dict, numLevels
+                while True:
+                        try:
+                            maxScore = int(input(f'What is the maximum score for {testname}? '))
+                            totalMax += maxScore
+                            if maxScore < 1:
+                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                continue
+                            else:
+                                break
+                        except ValueError:
+                            print('\n=============================\n| Please enter only digits. |\n=============================')
+                dict = {testname:[0, maxScore, 'mistakes']}
+                return testname, dict, totalMax, numLevels
 
             # If yes, continue building subfolders, if no process dict
             if moreLevels[0] == 'y':
@@ -112,8 +124,19 @@ def build_simple_dict(testname):
                         continue
             else:
                 for layer1 in subfold1:
-                    dict1.update({layer1[1]:[0, '']})
-                return dict1, numLevels
+                    while True:
+                        try:
+                            maxScore = int(input(f'What is the maximum score for {layer1[1]}? '))
+                            totalMax += maxScore
+                            if maxScore < 1:
+                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                continue
+                            else:
+                                break
+                        except ValueError:
+                            print('\n=============================\n| Please enter only digits. |\n=============================')
+                    dict1.update({layer1[1]:[0, maxScore, '']})
+                return testname, dict, totalMax, numLevels
             
             if moreLevels[0] == 'y':
                 numLevels += 1
@@ -141,23 +164,45 @@ def build_simple_dict(testname):
                             break
                     subfold3.append([i+1, subName3])
                 for layer3 in subfold3:
-                    dict3.update({layer3[1]:[0, '']})
+                    while True:
+                        try:
+                            maxScore = int(input(f'What is the maximum score for {layer3[1]}? '))
+                            totalMax += maxScore
+                            if maxScore < 1:
+                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                continue
+                            else:
+                                break
+                        except ValueError:
+                            print('\n=============================\n| Please enter only digits. |\n=============================')
+                    dict3.update({layer3[1]:[0, maxScore, '']})
                 for layer2 in subfold2:
                     dict2.update({layer2[1]:dict3})
                 for layer1 in subfold1:
                     dict1.update({layer1[1]:dict2})
-                return dict1, numLevels
+                return testname, dict1, numLevels
             else:
                 for layer2 in subfold2:
-                    dict2.update({layer2[1]:[0, '']})
+                    while True:
+                        try:
+                            maxScore = int(input(f'What is the maximum score for {layer2[1]}? '))
+                            totalMax += maxScore
+                            if maxScore < 1:
+                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                continue
+                            else:
+                                break
+                        except ValueError:
+                            print('\n=============================\n| Please enter only digits. |\n=============================')
+                    dict2.update({layer2[1]:[0, maxScore, '']})
                 for layer1 in subfold1:
                     dict1.update({layer1[1]:dict2})
-                return dict1, numLevels
+                return testname, dict, totalMax, numLevels
         elif moreLevels[0] == 'n':
             dict = {testname:[0,'mistakes']}
-            return dict, numLevels
+            return testname, dict, totalMax, numLevels
         else:
             continue
 
-# dict, levels = build_simple_dict('IELTS')
-# print(f'\n-----------------\n\nNumber of levels: {levels}\n\nDictionary:\n\n{dict}\n')
+name, dict, total, levels = build_simple_dict('IELTS')
+print(f'\n-----------------\n\nNumber of levels: {levels}\n\n{name} (Maximum score: {total}):\n\n{dict}\n')
