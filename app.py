@@ -1282,6 +1282,7 @@ def add_scores(test_raw, test_db, test_index):
                                     print('\n' + layer2 + " : " + str(dct[title][layer1][layer2]))
                             else:
                                 for layer3, v3 in dct[title][layer1][layer2].items():
+                                    print(f'{layer3} : ')
                                     while True:
                                         try:
                                             u_score = int(input(f'\nWhat was your score out of {v3[1]}? '))
@@ -1294,6 +1295,8 @@ def add_scores(test_raw, test_db, test_index):
                                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                             continue
                                     dct[title][layer1][layer2][layer3][0] = u_score
+                                    print(f'score: {u_score}')
+                                    print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
                                     if u_score < v3[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
                                         tmp_m_lst = []
@@ -1354,6 +1357,5 @@ def add_scores(test_raw, test_db, test_index):
                                             print("---\nNo remaining mistake types.\n")
                     print('----------------') 
                 print('\n\n================')
-    return test_choice, dct
-    
+    return test_choice, dct    
 main()

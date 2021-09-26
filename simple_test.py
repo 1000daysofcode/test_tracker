@@ -1,19 +1,21 @@
 def build_simple_dict(testname):
-    moreLevels = 'undefined'    
+    moreLevels = 'undefined'
+    proceed_num = 0
     maxScore = 0
     totalMax = 0
     numLevels = 0
+    sectCount1 = 0
+    sectCount2 = 0
     subfold1 = []
     subfold2 = []
     subfold3 = []
     dict1 = {}
-    dict2 = {}
-    dict3 = {}
+
     while moreLevels != False and moreLevels[0] != 'n':
         if moreLevels == 'undefined':
             while True:
                 try:
-                    moreLevels = (input('\n-----------------\nIs this divided into parts? Y/N ')).lower().strip()
+                    moreLevels = (input('\n-----------------\n\nIs this divided into parts? Y/N ')).lower().strip()
                     if moreLevels[0] == 'y' or moreLevels[0] == 'n':
                         break
                     elif isinstance(moreLevels, str) == False:
@@ -30,7 +32,6 @@ def build_simple_dict(testname):
                 while True:
                     try:
                         get_subSize1 = int(input('\nHow many identical parts? '))
-                        print('\n')
                         if get_subSize1 > 10 or get_subSize1 < 1:
                             print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
                             continue
@@ -39,10 +40,8 @@ def build_simple_dict(testname):
                     except ValueError:
                         print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
                         continue
-                if get_subSize1 > 1:
-                    print(f'\nPlease enter the names for all {get_subSize1} parts:\n-----------------')
-                else: 
-                    print(f'\nPlease enter the name:\n-----------------')
+                print(f'\nPlease enter the name(s) for the section(s)\n-----------------')
+                names = []
                 for i in range(get_subSize1):
                     while True:
                         subName1 = input(f'Please enter a section name for section {i+1}: ')
@@ -50,12 +49,42 @@ def build_simple_dict(testname):
                             print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
                             continue
                         else:
+                            names.append(subName1)
                             break
-                    subfold1.append([i+1, subName1])
                 while True:
                     try:
-                        moreLevels = (input('\n-----------------\nDo you need to divide into more sections [Ask #2]? Y/N ')).lower().strip()
-                        if moreLevels[0] == 'y' or moreLevels[0] == 'n':
+                        moreLevels = (input('Do you need to divide into more sections? Y/N ')).lower().strip()
+                        if moreLevels[0] == 'y':
+                            proceed_num += 1
+                            while True:
+                                try:
+                                    sectCount1 = int(input(f'Please enter the number of sections: '))
+                                    print('-')
+                                    if sectCount1 > 10 or sectCount1 < 1:
+                                        print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                        continue
+                                    else:
+                                        break
+                                except ValueError:
+                                    print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                    continue
+                            for name in names:
+                                subfold1.append({'name':name, 'count':sectCount1})
+                            break
+                        elif moreLevels[0] == 'n':
+                            while True:
+                                try:
+                                    maxScore = int(input(f'What is the maximum score for each these sections? '))
+                                    if maxScore < 1:
+                                        print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                        continue
+                                    else:
+                                        break
+                                except ValueError:
+                                    print('\n=============================\n| Please enter only digits. |\n=============================')
+                            for name in names:
+                                subfold1.append({'name':name, 'score':[0, maxScore, 'none :)']})
+                                totalMax += maxScore
                             break
                         elif isinstance(moreLevels, str) == False:
                             print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -68,141 +97,163 @@ def build_simple_dict(testname):
                         continue
             else:
                 while True:
-                        try:
-                            maxScore = int(input(f'What is the maximum score for {testname}? '))
-                            totalMax += maxScore
-                            if maxScore < 1:
-                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
-                                continue
-                            else:
-                                break
-                        except ValueError:
-                            print('\n=============================\n| Please enter only digits. |\n=============================')
-                dict = {testname:[0, maxScore, 'mistakes']}
-                return testname, dict, totalMax, numLevels
+                    try:
+                        maxScore = int(input(f'What is the maximum score for {testname}? '))
+                        if maxScore < 1:
+                            print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                            continue
+                        else:
+                            break
+                    except ValueError:
+                        print('\n=============================\n| Please enter only digits. |\n=============================')
+                test = {testname:[0, maxScore, 'none :)']}
+                totalMax += maxScore
+                return testname, test, totalMax, numLevels
 
             # If yes, continue building subfolders, if no process dict
-            if moreLevels[0] == 'y':
+            if proceed_num > 0:
+                proceed_num = 0
                 numLevels += 1
-                while True:
-                    try:
-                        get_subSize2 = int(input('\nHow many identical parts is this broken into? '))
-                        if get_subSize2 > 10 or get_subSize2 < 1:
-                            print('\n====================================\n| Please enter a number from 1-10. |\n====================================')
-                            continue
-                        else:
-                            break
-                    except ValueError:
-                        print('\n====================================\n| Please enter a number from 1-10. |\n====================================')
+                # get_subSize2 = int(input('How many identical parts? '))
+                for i in subfold1:
+                    if 'score' in i.keys():
                         continue
-                if get_subSize2 > 1:
-                    print(f'\nPlease enter the names for all {get_subSize2} parts:\n-----------------')
-                else: 
-                    print(f'\nPlease enter the name:\n-----------------')
-                for i in range(get_subSize2):
-                    while True:
-                        subName2 = input(f'Please enter a section name for section {i+1}: ')
-                        if len(subName2) > 20 or len(subName2) <= 2:
-                            print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
-                            continue
-                        else:
-                            break
-                    subfold2.append([i+1, subName2])
-                while True:
-                    try: 
-                        moreLevels = (input('\n-----------------\nDo you need to divide into more sections [Ask #3]? Y/N ')).lower().strip()
-                        if moreLevels[0] == 'y' or moreLevels[0] == 'n':
-                            break
-                        elif isinstance(moreLevels, str) == False:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
-                            continue
-                        else:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
-                            continue
-                    except IndexError:
-                        print('\n=================================\n| That is not a valid response. |\n=================================')
-                        continue
-            else:
-                for layer1 in subfold1:
-                    while True:
-                        try:
-                            maxScore = int(input(f'What is the maximum score for {layer1[1]}? '))
-                            totalMax += maxScore
-                            if maxScore < 1:
-                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                    else:     
+                        print(f'\nPlease enter the names for section "{i["name"]}"\n-----------------')
+                        names = []
+                        for j in range(i['count']):
+                            while True:
+                                subName2 = input(f'Please enter the section name for section {j+1}: ')
+                                if len(subName2) > 20 or len(subName2) <= 2:
+                                    print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
+                                    continue
+                                else:
+                                    names.append(subName2)
+                                    break
+                        while True:
+                            try:
+                                moreLevels = (input('Do you need to divide into more sections? Y/N ')).lower().strip()
+                                if moreLevels[0] == 'y':
+                                    proceed_num += 1
+                                    while True:
+                                        try:
+                                            sectCount2 = int(input(f'Please enter the number of sections: '))
+                                            print('-')
+                                            if sectCount2 > 10 or sectCount2 < 1:
+                                                print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                                continue
+                                            else:
+                                                break
+                                        except ValueError:
+                                            print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                            continue
+                                    for name in names:
+                                        subfold2.append({'parent':i['name'], 'name':name, 'count':sectCount2}) 
+                                    break
+                                elif moreLevels[0] == 'n':
+                                    while True:
+                                        try:
+                                            maxScore = int(input(f'What is the maximum score for each these sections? '))
+                                            if maxScore < 1:
+                                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                                continue
+                                            else:
+                                                break
+                                        except ValueError:
+                                            print('\n=============================\n| Please enter only digits. |\n=============================')
+                                    for name in names:
+                                        subfold2.append({'parent':i['name'], 'name':name, 'score':[0, maxScore, 'none :)']}) 
+                                        totalMax += maxScore
+                                    break
+                                elif isinstance(moreLevels, str) == False:
+                                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                                    continue
+                                else:
+                                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                                    continue
+                            except IndexError:
+                                print('\n=================================\n| That is not a valid response. |\n=================================')
                                 continue
-                            else:
-                                break
-                        except ValueError:
-                            print('\n=============================\n| Please enter only digits. |\n=============================')
-                    dict1.update({layer1[1]:[0, maxScore, '']})
-                return testname, dict, totalMax, numLevels
+                        # subfold2.append([sectCount2, subName2])           
+            else:
+                for layer in subfold1:
+                    dict1.update({layer['name']:layer['score']})
+                test = {testname:dict1}
+                return testname, test, totalMax, numLevels
             
-            if moreLevels[0] == 'y':
+            if proceed_num > 0:
+                proceed_num = 0
                 numLevels += 1
-                while True:
-                    try:
-                        get_subSize3 = int(input('\nHow many identical parts? '))
-                        if get_subSize3 > 10 or get_subSize3 < 1:
-                            print('\n====================================\n| Please enter a number from 1-10. |\n====================================')
-                            continue
-                        else:
-                            break
-                    except ValueError:
-                        print('\n====================================\n| Please enter a number from 1-10. |\n====================================')
-                if get_subSize3 > 1:
-                    print(f'\nPlease enter the names for all {get_subSize3} parts:\n-----------------')
-                else: 
-                    print(f'\nPlease enter the name:\n-----------------')
-                for i in range(get_subSize3):
-                    while True:
-                        subName3 = input(f'Please enter a section name for section {i+1}: ')
-                        if len(subName3) > 20 or len(subName3) <= 2:
-                            print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
-                            continue
-                        else:
-                            break
-                    subfold3.append([i+1, subName3])
-                for layer3 in subfold3:
-                    while True:
-                        try:
-                            maxScore = int(input(f'What is the maximum score for {layer3[1]}? '))
+                # get_subSize3 = int(input('How many identical parts? '))
+                for i in subfold2:
+                    if 'score' in i.keys():
+                        continue
+                    else:     
+                        print(f'\nPlease enter the names for "{i["parent"]} - {i["name"]}"\n-----------------')
+                        names = []
+                        for j in range(i['count']):
+                            while True:
+                                subName3 = input(f'Please enter the section name for section {j+1}: ')
+                                if len(subName3) > 20 or len(subName3) <= 2:
+                                    print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
+                                    continue
+                                else:
+                                    names.append(subName3)
+                                    break
+                        while True:
+                            try:
+                                maxScore = int(input(f'What is the maximum score for sections? '))
+                                if maxScore < 1:
+                                    print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                    continue
+                                else:
+                                    break
+                            except ValueError:
+                                print('\n=============================\n| Please enter only digits. |\n=============================')
+                        for name in names:    
+                            subfold3.append({'parent':i['name'], 'name':name, 'score':[0, maxScore, 'none :)']})
                             totalMax += maxScore
-                            if maxScore < 1:
-                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
-                                continue
+                for prim_f in subfold1:
+                    if 'score' not in prim_f.keys():
+                        dict2 = {}
+                        for sec_f in subfold2:
+                            if 'score' not in sec_f.keys():
+                                if sec_f['parent'] == prim_f['name']:
+                                    dict3 = {}
+                                    for ter_f in subfold3:
+                                        if ter_f['parent'] == sec_f['name']:
+                                            dict3.update({ter_f['name']:ter_f['score']})
+                                        else:
+                                            continue
+                                    dict2.update({sec_f['name']:dict3})
+                                else:
+                                    continue
+                            elif sec_f['parent'] == prim_f['name']:
+                                dict2.update({sec_f['name']:sec_f['score']})
                             else:
-                                break
-                        except ValueError:
-                            print('\n=============================\n| Please enter only digits. |\n=============================')
-                    dict3.update({layer3[1]:[0, maxScore, '']})
-                for layer2 in subfold2:
-                    dict2.update({layer2[1]:dict3})
-                for layer1 in subfold1:
-                    dict1.update({layer1[1]:dict2})
-                return testname, dict1, numLevels
+                                continue
+                        dict1.update({prim_f['name']:dict2})
+                    else:
+                        dict1.update({prim_f['name']:prim_f['score']})
+                test = {testname:dict1}
+                return testname, test, totalMax, numLevels
             else:
-                for layer2 in subfold2:
-                    while True:
-                        try:
-                            maxScore = int(input(f'What is the maximum score for {layer2[1]}? '))
-                            totalMax += maxScore
-                            if maxScore < 1:
-                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
-                                continue
+                for prim_f in subfold1:
+                    if 'score' not in prim_f.keys():
+                        dict2 = {}
+                        for sec_f in subfold2:
+                            if sec_f['parent'] == prim_f['name']:
+                                dict2.update({sec_f['name']:sec_f['score']})
                             else:
-                                break
-                        except ValueError:
-                            print('\n=============================\n| Please enter only digits. |\n=============================')
-                    dict2.update({layer2[1]:[0, maxScore, '']})
-                for layer1 in subfold1:
-                    dict1.update({layer1[1]:dict2})
-                return testname, dict, totalMax, numLevels
-        elif moreLevels[0] == 'n':
-            dict = {testname:[0,'mistakes']}
-            return testname, dict, totalMax, numLevels
-        else:
-            continue
+                                continue
+                        dict1.update({prim_f['name']:dict2})
+                    else:
+                        dict1.update({prim_f['name']:prim_f['score']})
+                test = {testname:dict1}
+                return testname, test, totalMax, numLevels
 
-name, dict, total, levels = build_simple_dict('IELTS')
-print(f'\n-----------------\n\nNumber of levels: {levels}\n\n{name} (Maximum score: {total}):\n\n{dict}\n')
+name, test, max, levels = build_simple_dict('Test 1')
+print(f'''Name: {name}
+Dict:
+{test}
+max: {max} || levels: {levels}''')
