@@ -112,7 +112,16 @@ Enter an option: ''')).lower().strip()
                                                     print(layer2 + " : " + str(dct[title][layer1][layer2]))
                                             else:
                                                 for layer3, v3 in dct[title][layer1][layer2].items():
-                                                    print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
+                                                    print(f'\t{layer3} ',end='')
+                                                    if isinstance(dct[title][layer1][layer2][layer3], dict) != True:
+                                                        test = v3
+                                                        if isinstance(test, list) == True:
+                                                            print(f'|| Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
+                                                        else:
+                                                            print(f'\t{layer3} ',end='')
+                                                    else:
+                                                        for layer4, v4 in dct[title][layer1][layer2][layer3].items():
+                                                            print(f'\n\t{layer4} || Score: {v4[0]} out of: {v4[1]} || Mistakes: {v4[2]}')
                                     print('----------------') 
                         print('\n\n================')  
                         while True:
@@ -303,12 +312,21 @@ def analyze(test_db, test_index):
                                         pass
                                 else:
                                     for layer3, v3 in dct[title][layer1][layer2].items():
-                                        score += v3[0]
-                                        for type in m_list:
-                                            if type['name'] in v3[2]:
-                                                type['count'] += 1
-                                            else:
-                                                pass
+                                        if isinstance(dct[title][layer1][layer2][layer3], dict) != True:
+                                            score += v3[0]
+                                            for type in m_list:
+                                                if type['name'] in v3[2]:
+                                                    type['count'] += 1
+                                                else:
+                                                    pass
+                                        else:
+                                            for layer4, v4 in dct[title][layer1][layer2][layer3].items():
+                                                score += v4[0]
+                                                for type in m_list:
+                                                    if type['name'] in v4[2]:
+                                                        type['count'] += 1
+                                                    else:
+                                                        pass
                                         # print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
                         # print('----------------')
         if score > top_s:
@@ -1030,6 +1048,11 @@ def add_scores(test_raw, test_index):
     if len(test_raw) < 1:
         print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
     else:
+        subfold1 = []
+        subfold2 = []
+        subfold3 = []
+        subfold4 = []
+        new_dct = {}
         dct = {}
         print('\nHere are your test names and locations:\n')
         for c, i in enumerate(test_index):
@@ -1062,7 +1085,7 @@ def add_scores(test_raw, test_index):
                         except ValueError:
                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                             continue
-                    dct[title][0] = u_score
+                    # dct[title][0] = u_score
                     if u_score < v[1] and len(test_index[test_choice]['mistakes']) > 0:
                         add_m = 'undefined'
                         tmp_m_lst = []
@@ -1080,14 +1103,14 @@ def add_scores(test_raw, test_index):
                             else:
                                 tmp_m_lst.append(u_mistake)
                                 if dct[title][2] == 'none :)':
-                                    dct[title][2] = u_mistake
+                                    # dct[title][2] = u_mistake
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                         try:
                                             add_m = input('Would you like to add another mistake? Y/N').lower().strip()
                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                 break
                                             elif isinstance(add_m, str) == False:
-                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                print('\n=====================s============\n| That is not a valid response. |\n=================================\n')
                                                 continue
                                             else:
                                                 print('\n=================================\n| That is not a valid response. |\n=================================\n')
@@ -1098,9 +1121,10 @@ def add_scores(test_raw, test_index):
                                     if add_m[0] == 'y':
                                         continue
                                     else:
+                                        subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                                         break
                                 else:
-                                    dct[title][2] += f', {u_mistake}' 
+                                    # dct[title][2] += f', {u_mistake}' 
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                         try:
                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1118,13 +1142,18 @@ def add_scores(test_raw, test_index):
                                     if add_m[0] == 'y':
                                         continue
                                     else:
+                                        subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                                         break
                         else:
+                            subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                             print("---\nNo remaining mistake types.\n")
+                    elif u_score == v[1]:
+                        subfold1.append({'name':title, 'score':[u_score, dct[title][1], dct[title][2]]})
                 else:
                     print('\n==============================================\n| ERROR: THIS IS INVALID. CONTACT DEVELOPER. |\n==============================================\n')
                     pass
             else:
+                subfold1.append({'name':title})
                 for layer1, v1 in dct[title].items():
                     print(f'\n{layer1}')
                     if isinstance(dct[title][layer1], dict) != True:
@@ -1141,7 +1170,7 @@ def add_scores(test_raw, test_index):
                                 except ValueError:
                                     print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                     continue
-                            dct[title][layer1][0] = u_score
+                            # dct[title][layer1][0] = u_score
                             if u_score < v1[1] and len(test_index[test_choice]['mistakes']) > 0:
                                 add_m = 'undefined'
                                 tmp_m_lst = []
@@ -1159,7 +1188,7 @@ def add_scores(test_raw, test_index):
                                     else:
                                         tmp_m_lst.append(u_mistake)
                                         if dct[title][layer1][2] == 'none :)':
-                                            dct[title][layer1][2] = u_mistake
+                                            # dct[title][layer1][2] = u_mistake
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 try:
                                                     add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1177,9 +1206,10 @@ def add_scores(test_raw, test_index):
                                             if add_m[0] == 'y':
                                                 continue
                                             else:
+                                                subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                                 break
                                         else:
-                                            dct[title][layer1][2] += f', {u_mistake}'
+                                            # dct[title][layer1][2] += f', {u_mistake}'
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 try:
                                                     add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1197,12 +1227,17 @@ def add_scores(test_raw, test_index):
                                             if add_m[0] == 'y':
                                                 continue
                                             else:
+                                                subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                                 break
                                 else:
+                                    subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                     print("---\nNo remaining mistake types.\n")
+                            elif u_score == v1[1]:
+                                subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], dct[title][layer1][2]]})
                         else:
                             print(f'\n{layer1}') 
                     else:
+                        subfold2.append({'parent':title,'name':layer1})
                         for layer2, v2 in dct[title][layer1].items():
                             print(f'\n{layer2} : ')
                             if isinstance(dct[title][layer1][layer2], dict) != True:
@@ -1219,7 +1254,7 @@ def add_scores(test_raw, test_index):
                                         except ValueError:
                                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                             continue
-                                    dct[title][layer1][layer2][0] = u_score
+                                    # dct[title][layer1][layer2][0] = u_score
                                     if u_score < v2[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
                                         tmp_m_lst = []
@@ -1237,7 +1272,7 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 tmp_m_lst.append(u_mistake)
                                                 if dct[title][layer1][layer2][2] == 'none :)':
-                                                    dct[title][layer1][layer2][2] = u_mistake
+                                                    # dct[title][layer1][layer2][2] = u_mistake
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1255,9 +1290,10 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
+                                                        subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                                         break
                                                 else:
-                                                    dct[title][layer1][layer2][2] += f', {u_mistake}'
+                                                    # dct[title][layer1][layer2][2] += f', {u_mistake}'
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1275,13 +1311,17 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
+                                                        subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                                         break
                                         else:
+                                            subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                             print("---\nNo remaining mistake types.\n")
+                                    elif u_score == v2[1]:
+                                        subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], dct[title][layer1][layer2][2]]})
                                 else:
                                     print('\n' + layer2 + " : " + str(dct[title][layer1][layer2]))
                             else:
-                                values = []
+                                subfold3.append({'parent':layer1,'name':layer2})
                                 for layer3, v3 in dct[title][layer1][layer2].items():
                                     print(f'{layer3} : ')
                                     while True:
@@ -1297,7 +1337,7 @@ def add_scores(test_raw, test_index):
                                             continue
                                     # print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
                                     # print(dct[title][layer1][layer2][layer3][0])
-                                    dct[title][layer1][layer2][layer3][0] = u_score
+                                    # dct[title][layer1][layer2][layer3][0] = u_score
                                     # if dct[title][layer1][layer2][layer3][0] != 'tbd':
                                     #     continue
                                     # print()
@@ -1320,7 +1360,7 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 tmp_m_lst.append(u_mistake)
                                                 if dct[title][layer1][layer2][layer3][2] == 'none :)':
-                                                    dct[title][layer1][layer2][layer3][2] = u_mistake
+                                                    # dct[title][layer1][layer2][layer3][2] = u_mistake
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1338,7 +1378,7 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
-                                                        values.append([u_score, dct[title][layer1][layer2][layer3][2] ,tmp_m_lst])
+                                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                                         break
                                                 else:
                                                     dct[title][layer1][layer2][layer3][2] += f', {u_mistake}'
@@ -1359,12 +1399,47 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
-                                                        values.append([u_score, dct[title][layer1][layer2][layer3][2] ,tmp_m_lst])
+                                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                                         break
                                         else:
+                                            subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                             print("---\nNo remaining mistake types.\n")
+                                    elif u_score == v3[1]:
+                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], dct[title][layer1][layer2][layer3][2]]})
                     print('----------------') 
                 print('\n\n================')
-                print(values)
-    return test_choice, dct    
+                print(f'\n{subfold1}\n\n{subfold2}\n\n{subfold3}\n\n{subfold4}')
+            for prim_f in subfold1:
+                if 'score' not in prim_f.keys():
+                    dict2 = {}
+                    for sec_f in subfold2:
+                        if 'score' not in sec_f.keys():
+                            if sec_f['parent'] == prim_f['name']:
+                                dict3 = {}
+                                for ter_f in subfold3:
+                                    if 'score' not in ter_f.keys():
+                                        if ter_f['parent'] == sec_f['name']:
+                                            dict4 = {}
+                                            for quad_f in subfold4:
+                                                if quad_f['gparent'] == ter_f['parent'] == sec_f['name']:
+                                                    dict4.update({quad_f['name']:quad_f['score']})
+                                                else:
+                                                    pass
+                                            dict3.update({ter_f['name']:dict4})
+                                        else:    
+                                            continue
+                                    elif ter_f['parent'] == sec_f['name']:
+                                        dict3.update({ter_f['name']:ter_f['score']})
+                                dict2.update({sec_f['name']:dict3})
+                            else:
+                                continue
+                        elif sec_f['parent'] == prim_f['name']:
+                            dict2.update({sec_f['name']:sec_f['score']})
+                        else:
+                            continue
+                    new_dct.update({prim_f['name']:dict2})
+                else:
+                    new_dct.update({prim_f['name']:prim_f['score']})
+            dct = {test_index[test_choice]['name']:new_dct}
+            return test_choice, dct  
 main()

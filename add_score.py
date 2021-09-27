@@ -1,11 +1,12 @@
 import copy
 
 # test_raw = [{'IELTS': {'Reading': {'Part 1': [0, 7, 'none :)'], 'Part 2': [0, 7, 'none :)'], 'Part 3': [0, 7, 'none :)']}, 'Writing': {'Part 1': [0, 7, 'none :)'], 'Part 2': [0, 7, 'none :)'], 'Part 3': [0, 7, 'none :)'], 'Part 4': [0, 7, 'none :)']}}}]
-test_db = [[{'IELTS': {'Reading': {'Part 1': [6, 7, '1, 2'], 'Part 2': [7, 7, 'none :)'], 'Part 3': [7, 7, 'none :)']}, 'Writing': {'Part 1': [7, 7, 'none :)'], 'Part 2': [7, 7, 'none :)'], 'Part 3': [3, 7, '3'], 'Part 4': [2, 7, '3, 2, 1']}}}]]
+test_raw = [{'Test': {'Read': {'111': {'222': [7, 7, 'none :)']}}, 'Write': {'111': {'222': [7, 7, 'none :)']}}}}]
+test_db = [[]]
 # old_test_db = [[{'long': {'AAA': [0, 10, ''], 'BBB': {'aaa': [0, 10, ''], 'bbb': {'last': [0, 10, '']}}}}, {'short': {'AAA': [0, 10, '']}}, {'mini':[0, 10, '']}]]
-# test_index = [{'name':'IELTS', 'mistakes': ['1', '2', '3']}]
-test_raw = [{'Part 1':[0, 7, 'none :)']}]
-test_index = [{'name': 'Test', 'mistakes': ['1', '2', '3']}]
+test_index = [{'name':'IELTS', 'mistakes': ['1', '2', '3']}]
+# test_raw = [{'Part 1':[0, 7, 'none :)']}]
+# test_index = [{'name': 'Test', 'mistakes': ['1', '2', '3']}]
 
 def add_scores(test_raw, test_index):
     if len(test_raw) < 1:
@@ -108,6 +109,7 @@ def add_scores(test_raw, test_index):
                                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                                         break
                         else:
+                            subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                             print("---\nNo remaining mistake types.\n")
                     elif u_score == v[1]:
                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], dct[title][2]]})
@@ -115,6 +117,7 @@ def add_scores(test_raw, test_index):
                     print('\n==============================================\n| ERROR: THIS IS INVALID. CONTACT DEVELOPER. |\n==============================================\n')
                     pass
             else:
+                subfold1.append({'name':title})
                 for layer1, v1 in dct[title].items():
                     print(f'\n{layer1}')
                     if isinstance(dct[title][layer1], dict) != True:
@@ -191,12 +194,14 @@ def add_scores(test_raw, test_index):
                                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                                 break
                                 else:
+                                    subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                     print("---\nNo remaining mistake types.\n")
                             elif u_score == v1[1]:
                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], dct[title][layer1][2]]})
                         else:
                             print(f'\n{layer1}') 
                     else:
+                        subfold2.append({'parent':title,'name':layer1})
                         for layer2, v2 in dct[title][layer1].items():
                             print(f'\n{layer2} : ')
                             if isinstance(dct[title][layer1][layer2], dict) != True:
@@ -273,13 +278,14 @@ def add_scores(test_raw, test_index):
                                                         subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                                         break
                                         else:
+                                            subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                             print("---\nNo remaining mistake types.\n")
                                     elif u_score == v2[1]:
                                         subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], dct[title][layer1][layer2][2]]})
                                 else:
                                     print('\n' + layer2 + " : " + str(dct[title][layer1][layer2]))
                             else:
-                                values = []
+                                subfold3.append({'parent':layer1,'name':layer2})
                                 for layer3, v3 in dct[title][layer1][layer2].items():
                                     print(f'{layer3} : ')
                                     while True:
@@ -336,7 +342,7 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
-                                                        subfold4.append({'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
+                                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                                         break
                                                 else:
                                                     dct[title][layer1][layer2][layer3][2] += f', {u_mistake}'
@@ -357,15 +363,16 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
-                                                        subfold4.append({'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
+                                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                                         break
                                         else:
+                                            subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], tmp_m_lst]})
                                             print("---\nNo remaining mistake types.\n")
                                     elif u_score == v3[1]:
-                                        subfold4.append({'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], dct[title][layer1][layer2][layer3][2]]})
+                                        subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], dct[title][layer1][layer2][layer3][2]]})
                     print('----------------') 
                 print('\n\n================')
-                print(values)
+                print(f'\n{subfold1}\n\n{subfold2}\n\n{subfold3}\n\n{subfold4}')
             for prim_f in subfold1:
                 if 'score' not in prim_f.keys():
                     dict2 = {}
@@ -378,14 +385,14 @@ def add_scores(test_raw, test_index):
                                         if ter_f['parent'] == sec_f['name']:
                                             dict4 = {}
                                             for quad_f in subfold4:
-                                                if quad_f['parent'] == ter_f['name']:
+                                                if quad_f['gparent'] == ter_f['parent'] == sec_f['name']:
                                                     dict4.update({quad_f['name']:quad_f['score']})
                                                 else:
-                                                    continue
+                                                    pass
                                             dict3.update({ter_f['name']:dict4})
                                         else:    
                                             continue
-                                    else:
+                                    elif ter_f['parent'] == sec_f['name']:
                                         dict3.update({ter_f['name']:ter_f['score']})
                                 dict2.update({sec_f['name']:dict3})
                             else:
