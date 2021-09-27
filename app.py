@@ -137,7 +137,7 @@ Enter an option: ''')).lower().strip()
                     choice = 'undefined'
                     continue
                 else:
-                    index, scores = add_scores(test_raw, test_db, test_index)
+                    index, scores = add_scores(test_raw, test_index)
                     test_db[index].append(scores)
                     print(test_db)
                     choice = 'undefined'
@@ -458,7 +458,7 @@ def build_simple_dict(testname):
                                 except ValueError:
                                     print('\n=============================\n| Please enter only digits. |\n=============================')
                             for name in names:
-                                subfold1.append({'name':name, 'score':[0, maxScore, 'none :)']})
+                                subfold1.append({'name':name, 'score':['tbd', maxScore, 'none :)']})
                                 totalMax += maxScore
                             break
                         elif isinstance(moreLevels, str) == False:
@@ -481,7 +481,7 @@ def build_simple_dict(testname):
                             break
                     except ValueError:
                         print('\n=============================\n| Please enter only digits. |\n=============================')
-                test = {testname:[0, maxScore, 'none :)']}
+                test = {testname:['tbd', maxScore, 'none :)']}
                 totalMax += maxScore
                 return testname, test, totalMax, numLevels
 
@@ -537,7 +537,7 @@ def build_simple_dict(testname):
                                         except ValueError:
                                             print('\n=============================\n| Please enter only digits. |\n=============================')
                                     for name in names:
-                                        subfold2.append({'parent':i['name'], 'name':name, 'score':[0, maxScore, 'none :)']}) 
+                                        subfold2.append({'parent':i['name'], 'name':name, 'score':['tbd', maxScore, 'none :)']}) 
                                         totalMax += maxScore
                                     break
                                 elif isinstance(moreLevels, str) == False:
@@ -586,7 +586,7 @@ def build_simple_dict(testname):
                             except ValueError:
                                 print('\n=============================\n| Please enter only digits. |\n=============================')
                         for name in names:    
-                            subfold3.append({'parent':i['name'], 'name':name, 'score':[0, maxScore, 'none :)']})
+                            subfold3.append({'parent':i['name'], 'name':name, 'score':['tbd', maxScore, 'none :)']})
                             totalMax += maxScore
                 for prim_f in subfold1:
                     if 'score' not in prim_f.keys():
@@ -709,7 +709,7 @@ def build_custom_dict(testname):
                                             break
                                     except ValueError:
                                         print('\n=============================\n| Please enter only digits. |\n=============================')
-                                subfold1.append({'name':subName1, 'score':[0, maxScore, 'none :)']})
+                                subfold1.append({'name':subName1, 'score':['tbd', maxScore, 'none :)']})
                                 break
                             elif isinstance(moreLevels, str) == False:
                                 print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -732,7 +732,7 @@ def build_custom_dict(testname):
                             break
                     except ValueError:
                         print('\n=============================\n| Please enter only digits. |\n=============================')
-                test = {testname:[0, maxScore, 'none :)']}
+                test = {testname:['tbd', maxScore, 'none :)']}
                 return testname, test, totalMax, numLevels
 
             # If yes, continue building subfolders, if no process dict
@@ -784,7 +784,7 @@ def build_custom_dict(testname):
                                                     break
                                             except ValueError:
                                                 print('\n=============================\n| Please enter only digits. |\n=============================')
-                                        subfold2.append({'parent':i['name'], 'name':subName2, 'score':[0, maxScore, 'none :)']}) 
+                                        subfold2.append({'parent':i['name'], 'name':subName2, 'score':['tbd', maxScore, 'none :)']}) 
                                         break
                                     elif isinstance(moreLevels, str) == False:
                                         print('\n=================================\n| That is not a valid response. |\n=================================')
@@ -830,7 +830,7 @@ def build_custom_dict(testname):
                                         break
                                 except ValueError:
                                     print('\n=============================\n| Please enter only digits. |\n=============================')
-                            subfold3.append({'parent':i['name'], 'name':subName3, 'score':[0, maxScore, 'none :)']})
+                            subfold3.append({'parent':i['name'], 'name':subName3, 'score':['tbd', maxScore, 'none :)']})
                 for prim_f in subfold1:
                     if 'score' not in prim_f.keys():
                         dict2 = {}
@@ -885,7 +885,7 @@ def build_custom_dict(testname):
                         break
                 except ValueError:
                     print('\n=============================\n| Please enter only digits. |\n=============================')
-            dict = {testname:[0, maxScore, 'none :)']}
+            dict = {testname:['tbd', maxScore, 'none :)']}
             test = {testname:dict}
             return testname, test, totalMax, numLevels
         else:
@@ -1026,11 +1026,11 @@ def make_mlist():
         break
     return mistake_list
 
-def add_scores(test_raw, test_db, test_index):
-    dct = {}
+def add_scores(test_raw, test_index):
     if len(test_raw) < 1:
         print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
     else:
+        dct = {}
         print('\nHere are your test names and locations:\n')
         for c, i in enumerate(test_index):
             print(f'Test structure: {i["name"]} || Test location: {c+1}')
@@ -1281,6 +1281,7 @@ def add_scores(test_raw, test_db, test_index):
                                 else:
                                     print('\n' + layer2 + " : " + str(dct[title][layer1][layer2]))
                             else:
+                                values = []
                                 for layer3, v3 in dct[title][layer1][layer2].items():
                                     print(f'{layer3} : ')
                                     while True:
@@ -1294,9 +1295,14 @@ def add_scores(test_raw, test_db, test_index):
                                         except ValueError:
                                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                             continue
+                                    # print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
+                                    # print(dct[title][layer1][layer2][layer3][0])
                                     dct[title][layer1][layer2][layer3][0] = u_score
-                                    print(f'score: {u_score}')
-                                    print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
+                                    # if dct[title][layer1][layer2][layer3][0] != 'tbd':
+                                    #     continue
+                                    # print()
+                                    # print(f'score: {u_score}')
+                                    # print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
                                     if u_score < v3[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
                                         tmp_m_lst = []
@@ -1332,6 +1338,7 @@ def add_scores(test_raw, test_db, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
+                                                        values.append([u_score, dct[title][layer1][layer2][layer3][2] ,tmp_m_lst])
                                                         break
                                                 else:
                                                     dct[title][layer1][layer2][layer3][2] += f', {u_mistake}'
@@ -1352,10 +1359,12 @@ def add_scores(test_raw, test_db, test_index):
                                                     if add_m[0] == 'y':
                                                         continue
                                                     else:
+                                                        values.append([u_score, dct[title][layer1][layer2][layer3][2] ,tmp_m_lst])
                                                         break
                                         else:
                                             print("---\nNo remaining mistake types.\n")
                     print('----------------') 
                 print('\n\n================')
+                print(values)
     return test_choice, dct    
 main()
