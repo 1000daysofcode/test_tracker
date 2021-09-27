@@ -2,7 +2,6 @@ import copy
 
 def main():
     choice = 'undefined'
-    # Greet user
     print('''-----------------
 
 
@@ -22,13 +21,15 @@ def main():
 
     # Ask for name (add to variable)
     name = input('\n\nWelcome to Test Tracker! Please enter your name: ')
+    # Greet user
     print(f'\nWelcome, {name}!\n\nPlease create at least one test structure to continue.')
 
     # Initialize data structures
-    test_raw = []
-    test_db = []
-    test_index = []
+    test_raw = [] # Test structures
+    test_db = [] # Test scores
+    test_index = [] # Test name, location in raw/db and mistake lists
 
+    # Main loop runs until users quit by pressing 'q'
     while choice != False and choice[0] != 'q':
         if choice == 'undefined':
             while True:
@@ -45,156 +46,235 @@ def main():
     ===============================================
 
 Enter an option: ''')).lower().strip()
+                    # Only accept the options in the menu
                     if choice[0] == 'v' or choice[0] == 'a' or choice[0] == 'n' or choice[0] == 's' or choice[0] == 'q':
                         break
+                    # If input is not a string, reject input
                     elif isinstance(choice, str) == False:
                         print('\n=================================\n| That is not a valid response. |\n=================================')
                         continue
+                   # If the first letter is anything else aside from one of the letters, reject input
                     else:
                         print('\n=================================\n| That is not a valid response. |\n=================================')
                         continue
                 except IndexError:
                     print('\n=================================\n| That is not a valid response. |\n=================================')
                     continue
+            # VIEW TESTS
             if choice[0] == 'v':
+                # Reject this choice if there are no test structures
                 if len(test_raw) < 1 or len(test_index) < 1:
                     print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
                     choice = 'undefined'
                     continue
                 else:
                     print('\nHere are your test names and locations:\n')
+                    # Display the name and locaton of each test structure in the index. Index +1 is displayed to be user-friendly
                     for c, i in enumerate(test_index):
                         print(f'Test structure: {i["name"]} || Test location: {c+1}')
                     while True:
                         try:
+                            # User chooses test to view
                             test_choice = int(input('---\n\nPlease enter the location of your tests: '))-1
+                            # User must choose from index 0 to the last number in the list
                             if test_choice > len(test_index) or test_choice < 0:
                                 print(f'\n==================================\n| Please enter a number up to {len(test_index)}. |\n==================================')
                                 continue
+                            # Reject input if there is no score yet added for this test
                             elif test_db[test_choice] == []:
                                 print(f'\n===================================================\n| There are not yet any scores for this test type |\n===================================================')
                                 continue
                             else:
+                                # Accept input and break if all conditions are met
                                 break
                         except:
+                            # If input throws an error, remind user only to enter numbers, return to main menu in case input was 'q'
                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================')
-                            continue
+                            return
+                    #Choose all tests in database at the location the user chose
                     tests = test_db[test_choice]
                     print(f'Below are all test results for test {test_index[test_choice-1]}:\n\n================')
+                    # Enumerate list in order to print where tests are in the 
                     for c, dct in enumerate(tests):
                         print(f'Test #{c+1}\n----------------')
+                        # For first level of sections -> CHANGE this name later
                         for title, v in dct.items():
+                            # Print the name of the section
                             print(f'-> {title}\n----------------') 
+                            # If the value is a not a dictionary of other subsections
                             if isinstance(v, dict) != True:
                                 test = v
+                                # Check to make sure that it is a list, then print out the score
                                 if isinstance(test, list) == True:
                                     print(f'\tScore: {v[0]} out of: {v[1]} || Mistakes: {v[2]}')
                                 else:
                                     print()
                                     pass
+                            # If the value of the first section is a dictionary of subsections, iterate through
                             else:
                                 for layer1, v1 in dct[title].items():
+                                    # Print the name of the section
                                     print(f'{layer1}')
+                                    # If the value is a not a dictionary of other subsections
                                     if isinstance(dct[title][layer1], dict) != True:
                                         test = v1
+                                        # Check to make sure that it is a list, then print out the score
                                         if isinstance(test, list) == True:
                                             print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
                                         else:
+                                            # If not, print the name for reference
                                             print(f'{layer1}') 
+                                    # If the value of the second section is a dictionary of subsections, iterate through
                                     else:
                                         for layer2, v2 in dct[title][layer1].items():
+                                            # Print the name of the section
                                             print(f'{layer2} : ')
+                                            # If the value is a not a dictionary of other subsections
                                             if isinstance(dct[title][layer1][layer2], dict) != True:
                                                 test = v2
+                                                # Check to make sure that it is a list, then print out the score
                                                 if isinstance(test, list) == True:
                                                     print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
                                                 else:
+                                                    # If not, print the name for reference
                                                     print(layer2 + " : " + str(dct[title][layer1][layer2]))
+                                            # If the value of the third section is a dictionary of subsections, iterate through
                                             else:
                                                 for layer3, v3 in dct[title][layer1][layer2].items():
+                                                    # Print the name of the section
                                                     print(f'\t{layer3} ',end='')
+                                                    # If the value is a not a dictionary of other subsections
                                                     if isinstance(dct[title][layer1][layer2][layer3], dict) != True:
                                                         test = v3
+                                                        # Check to make sure that it is a list, then print out the score
                                                         if isinstance(test, list) == True:
                                                             print(f'|| Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
                                                         else:
+                                                            # If not, print the name for reference
                                                             print(f'\t{layer3} ',end='')
+                                                    # The last layer should only contain a list, so iterate through and print all scores
                                                     else:
                                                         for layer4, v4 in dct[title][layer1][layer2][layer3].items():
                                                             print(f'\n\t{layer4} || Score: {v4[0]} out of: {v4[1]} || Mistakes: {v4[2]}')
+                                    # Print in between major parts of the test
                                     print('----------------') 
+                        # Print this line in between tests. Stop between each test and wait for user to press enter to proceed.
                         print('\n\n================')  
                         while True:
                             input('\nYour tests are above.\n\nPress enter to continue. \n\n----------------\n')
                             break     
+                # Reset choice to undefined and continue through the main loop
                 choice = 'undefined'
                 continue
+            # ANALYZE TEST RESULTS
             elif choice[0] == 'a':
-                # print('\nYou chose to view a score analysis.\n')
-                if len(test_raw) < 1 or len(test_index) < 1:
+                # Reject this choice if there are no test scores 
+                if len(test_db) < 1 or len(test_index) < 1:
                     print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
                     choice = 'undefined'
                     continue
                 else:
+                    # Call analyze function with database and test index as parameters
                     analyze(test_db, test_index)
+                    # After function completes, reset choice to undefined and continue through the main loop
                     choice = 'undefined'
                     continue
+            # ADD NEW TEST SCORES
             elif choice[0] == 'n':
-                # print('\nYou chose to add a new score.\n')
-                if len(test_db) < 1 or len(test_index) < 1:
+                # Reject this choice if there are no test structures
+                if len(test_raw) < 1 or len(test_index) < 1:
                     print(f'\n============================================================\n| Please add at least one test structure in order to view. |\n============================================================')
                     choice = 'undefined'
                     continue
                 else:
+                    # Call function to add new scores, pass the raw tests and test index as parameters
                     index, scores = add_scores(test_raw, test_index)
+                    # Append new test to the to database at the correct index
                     test_db[index].append(scores)
-                    print(test_db)
+                    # print(test_db) ### CONSIDER DELETING THIS PRINT STATEMENT
+                    # After function completes, reset choice to undefined and continue through the main loop
                     choice = 'undefined'
                     continue
+            # ADD NEW TEST STRUCTURE
             elif choice[0] == 's':
-                print('\nYou chose to create a new test structure.\n')
+                # Call function to make new test structure
+                # 'testname't is the test's name, 'dct' is the structure, 'total' is the total possible score and 'levels' is the how many layers are in the score up to 4
                 testname, dct, total, levels = make_test_shell()
+                # Add a new space into the database to store all scores of this test type
                 test_db.append([])
+                # Add test structure to the list of test structures
                 test_raw.append(dct)
+                # Add spot on test index with information for analysis
                 test_index.append({'name':testname, 'maxscore':total, 'mistakes':make_mlist()})
+                # Print completed structure so user understands results
                 print(f'\nTest "{testname}" created. Please see below:')
                 for title, v in dct.items():
-                    print(f'\n{title}\n---') 
+                    # Print the name of the section
+                    print(f'-> {title}\n----------------') 
+                    # If the value is a not a dictionary of other subsections
                     if isinstance(v, dict) != True:
                         test = v
+                        # Check to make sure that it is a list, then print out the score
                         if isinstance(test, list) == True:
                             print(f'\tScore: {v[0]} out of: {v[1]} || Mistakes: {v[2]}')
                         else:
-                            print('ERROR. PLEASE CONTACT DESIGNER')
+                            print()
                             pass
+                    # If the value of the first section is a dictionary of subsections, iterate through
                     else:
                         for layer1, v1 in dct[title].items():
+                            # Print the name of the section
                             print(f'{layer1}')
+                            # If the value is a not a dictionary of other subsections
                             if isinstance(dct[title][layer1], dict) != True:
                                 test = v1
+                                # Check to make sure that it is a list, then print out the score
                                 if isinstance(test, list) == True:
                                     print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
                                 else:
+                                    # If not, print the name for reference
                                     print(f'{layer1}') 
+                            # If the value of the second section is a dictionary of subsections, iterate through
                             else:
                                 for layer2, v2 in dct[title][layer1].items():
+                                    # Print the name of the section
                                     print(f'{layer2} : ')
+                                    # If the value is a not a dictionary of other subsections
                                     if isinstance(dct[title][layer1][layer2], dict) != True:
                                         test = v2
+                                        # Check to make sure that it is a list, then print out the score
                                         if isinstance(test, list) == True:
                                             print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
                                         else:
+                                            # If not, print the name for reference
                                             print(layer2 + " : " + str(dct[title][layer1][layer2]))
+                                    # If the value of the third section is a dictionary of subsections, iterate through
                                     else:
                                         for layer3, v3 in dct[title][layer1][layer2].items():
-                                            print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
+                                            # Print the name of the section
+                                            print(f'\t{layer3} ',end='')
+                                            # If the value is a not a dictionary of other subsections
+                                            if isinstance(dct[title][layer1][layer2][layer3], dict) != True:
+                                                test = v3
+                                                # Check to make sure that it is a list, then print out the score
+                                                if isinstance(test, list) == True:
+                                                    print(f'|| Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
+                                                else:
+                                                    # If not, print the name for reference
+                                                    print(f'\t{layer3} ',end='')
+                                            # The last layer should only contain a list, so iterate through and print all scores
+                                            else:
+                                                for layer4, v4 in dct[title][layer1][layer2][layer3].items():
+                                                    print(f'\n\t{layer4} || Score: {v4[0]} out of: {v4[1]} || Mistakes: {v4[2]}')
+                            # Print in between major parts of the test
                             print('----------------')
+                # Let user view test print out before returning to main menu
                 while True:
                     input('Press enter to continue. \n\n----------------\n')
                     break
-                # print(type(dict_s))
                 choice = 'undefined'
                 continue
+            # When user closes app with 'q', close app.
             else:
                 print('''
 Thank you for using Test Tracker version 0!
@@ -209,19 +289,7 @@ Thank you for using Test Tracker version 0!
 ''')
                 choice = False
 
-    # for i in test_index:
-    #     print(f'Test structure: {i["name"]}\nTest location: {i["location"]+1}\n-')
-    # test_choice = int(input('Please enter the location of your test'))-1
-
-    # view = input('To see the test structure, press S.\nTo see your test results, press R')
-    # if view == 's':
-    #     print(test_raw[test_choice])
-    # else:
-    #     print(test_db[test_choice])
-    # print(test_db)
-
-    # # Type 'QUIT NOW' at any time to quit program. Confirmation y/n
-
+# ANALYZE TEST SCORES
 def analyze(test_db, test_index):
     score = 0
     num_tests = 0
@@ -253,7 +321,7 @@ def analyze(test_db, test_index):
                     break
             except:
                 print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================')
-                continue
+                return
         num_tests = len(test_db[test_choice])
         max_s = test_index[test_choice]['maxscore']
         tests = test_db[test_choice]
@@ -261,11 +329,8 @@ def analyze(test_db, test_index):
         tmp_mlist = test_index[test_choice]['mistakes']
         for each in tmp_mlist:
             m_list.append({'name':each.strip(), 'count':0})
-        # print(f'Below are all test results for test {test_index[test_choice-1]}:\n\n================')
         for c, dct in enumerate(tests):
-            # print(f'Test #{c+1}\n----------------')
             for title, v in dct.items():
-                # print(f'-> {title}\n----------------') 
                 if isinstance(v, dict) != True:
                     test = v
                     if isinstance(test, list) == True:
@@ -280,7 +345,6 @@ def analyze(test_db, test_index):
                         pass
                 else:
                     for layer1, v1 in dct[title].items():
-                        # print(f'{layer1}')
                         if isinstance(dct[title][layer1], dict) != True:
                             test = v1
                             if isinstance(test, list) == True:
@@ -290,13 +354,10 @@ def analyze(test_db, test_index):
                                         type['count'] += 1
                                     else:
                                         pass
-                                # print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
                             else:
-                                # print(f'{layer1}')
                                 pass 
                         else:
                             for layer2, v2 in dct[title][layer1].items():
-                                # print(f'{layer2} : ')
                                 if isinstance(dct[title][layer1][layer2], dict) != True:
                                     test = v2
                                     if isinstance(test, list) == True:
@@ -306,9 +367,7 @@ def analyze(test_db, test_index):
                                                 type['count'] += 1
                                             else:
                                                 pass
-                                        # print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
                                     else:
-                                        # print(layer2 + " : " + str(dct[title][layer1][layer2]))
                                         pass
                                 else:
                                     for layer3, v3 in dct[title][layer1][layer2].items():
@@ -327,8 +386,6 @@ def analyze(test_db, test_index):
                                                         type['count'] += 1
                                                     else:
                                                         pass
-                                        # print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
-                        # print('----------------')
         if score > top_s:
             top_s = score
             top_n = str(c)
@@ -340,11 +397,12 @@ def analyze(test_db, test_index):
             low_n = str(c)
         elif score == low_s:
             low_n += f', {str(c)}' 
-        # print('\n\n================')  
 
         total_s += score
         a_score = float(total_s) / num_tests
         name = test_index[test_choice]['name']
+        top_n = str(int(top_n) + 1)
+        low_n = str(int(low_n) + 1)
 
         print(f'''
     =====================================
@@ -391,6 +449,9 @@ def analyze(test_db, test_index):
             input('\nYour tests are above.\n\nPress enter to continue. \n\n----------------\n')
             break   
 
+
+
+# BUILD A SIMPLE TEST (Less detailed input)
 def build_simple_dict(testname):
     moreLevels = 'undefined'
     proceed_num = 0
@@ -507,7 +568,6 @@ def build_simple_dict(testname):
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1
-                # get_subSize2 = int(input('How many identical parts? '))
                 for i in subfold1:
                     if 'score' in i.keys():
                         continue
@@ -567,7 +627,6 @@ def build_simple_dict(testname):
                             except IndexError:
                                 print('\n=================================\n| That is not a valid response. |\n=================================')
                                 continue
-                        # subfold2.append([sectCount2, subName2])           
             else:
                 for layer in subfold1:
                     dict1.update({layer['name']:layer['score']})
@@ -577,7 +636,6 @@ def build_simple_dict(testname):
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1
-                # get_subSize3 = int(input('How many identical parts? '))
                 for i in subfold2:
                     if 'score' in i.keys():
                         continue
@@ -645,6 +703,7 @@ def build_simple_dict(testname):
                 test = {testname:dict1}
                 return testname, test, totalMax, numLevels
 
+# BUILD A COMPLEX TEST (More detailed input)
 def build_custom_dict(testname):
     moreLevels = 'undefined'
     proceed_num = 0
@@ -753,11 +812,9 @@ def build_custom_dict(testname):
                 test = {testname:['tbd', maxScore, 'none :)']}
                 return testname, test, totalMax, numLevels
 
-            # If yes, continue building subfolders, if no process dict
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1
-                # get_subSize2 = int(input('How many identical parts? '))
                 for i in subfold1:
                     if 'score' in i.keys():
                         continue
@@ -813,7 +870,6 @@ def build_custom_dict(testname):
                                 except IndexError:
                                     print('\n=================================\n| That is not a valid response. |\n=================================')
                                     continue
-                            # subfold2.append([sectCount2, subName2])           
             else:
                 for layer in subfold1:
                     dict1.update({layer['name']:layer['score']})
@@ -823,7 +879,6 @@ def build_custom_dict(testname):
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1
-                # get_subSize3 = int(input('How many identical parts? '))
                 for i in subfold2:
                     if 'score' in i.keys():
                         continue
@@ -887,10 +942,6 @@ def build_custom_dict(testname):
                         dict1.update({prim_f['name']:prim_f['score']})
                 test = {testname:dict1}
                 return testname, test, totalMax, numLevels
-                
-                # test = {testname:dict1}
-                # return test, numLevels
-
         elif moreLevels == 'n':
             while True:
                 try:
@@ -908,6 +959,8 @@ def build_custom_dict(testname):
             return testname, test, totalMax, numLevels
         else:
             continue
+
+# Choose between simple and custom test types
 
 def make_test_shell():
     choice = 'undefined'
@@ -965,31 +1018,7 @@ Please choose S/C: ''')).lower().strip()
                     else:
                         return build_custom_dict(testname)
 
-# def print_dict(dct):
-#     for title, v in dct.items():
-#         print(f'\nTest Name: {title}\n----------------')
-#         for layer1, v1 in dct[title].items():
-#             print(f'{layer1}')
-#             if isinstance(dct[title][layer1], dict) != True:
-#                 test = v1
-#                 if isinstance(test, list) == True:
-#                     print(f'\tScore: {v1[0]} out of: {v1[1]} || Mistakes: {v1[2]}')
-#                 else:
-#                     print(str(dct[title][layer1])) 
-#             else:
-#                 for layer2, v2 in dct[title][layer1].items():
-#                     print(f'{layer2} : ')
-#                     if isinstance(dct[title][layer1][layer2], dict) != True:
-#                         test = v2
-#                         if isinstance(test, list) == True:
-#                             print(f'\tScore: {v2[0]} out of: {v2[1]} || Mistakes: {v2[2]}')
-#                         else:
-#                             print(layer2 + " : " + str(dct[title][layer1][layer2]))
-#                     else:
-#                         for layer3, v3 in dct[title][layer1][layer2].items():
-#                             print(f'\t{layer3} || Score: {v3[0]} out of: {v3[1]} || Mistakes: {v3[2]}')
-#             print('----------------')
-
+# MAKE A MISTAKE LIST FOR INDEX
 def make_mlist():
     mistake_list = []
     add_more = ''
@@ -1044,6 +1073,7 @@ def make_mlist():
         break
     return mistake_list
 
+# ADD A NEW SCORED TEST
 def add_scores(test_raw, test_index):
     if len(test_raw) < 1:
         print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
@@ -1085,7 +1115,6 @@ def add_scores(test_raw, test_index):
                         except ValueError:
                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                             continue
-                    # dct[title][0] = u_score
                     if u_score < v[1] and len(test_index[test_choice]['mistakes']) > 0:
                         add_m = 'undefined'
                         tmp_m_lst = []
@@ -1103,7 +1132,6 @@ def add_scores(test_raw, test_index):
                             else:
                                 tmp_m_lst.append(u_mistake)
                                 if dct[title][2] == 'none :)':
-                                    # dct[title][2] = u_mistake
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                         try:
                                             add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1124,7 +1152,6 @@ def add_scores(test_raw, test_index):
                                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], tmp_m_lst]})
                                         break
                                 else:
-                                    # dct[title][2] += f', {u_mistake}' 
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                         try:
                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1170,7 +1197,6 @@ def add_scores(test_raw, test_index):
                                 except ValueError:
                                     print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                     continue
-                            # dct[title][layer1][0] = u_score
                             if u_score < v1[1] and len(test_index[test_choice]['mistakes']) > 0:
                                 add_m = 'undefined'
                                 tmp_m_lst = []
@@ -1188,7 +1214,6 @@ def add_scores(test_raw, test_index):
                                     else:
                                         tmp_m_lst.append(u_mistake)
                                         if dct[title][layer1][2] == 'none :)':
-                                            # dct[title][layer1][2] = u_mistake
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 try:
                                                     add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1209,7 +1234,6 @@ def add_scores(test_raw, test_index):
                                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], tmp_m_lst]})
                                                 break
                                         else:
-                                            # dct[title][layer1][2] += f', {u_mistake}'
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 try:
                                                     add_m = input('Would you like to add another mistake? Y/N').lower().strip()
@@ -1254,7 +1278,6 @@ def add_scores(test_raw, test_index):
                                         except ValueError:
                                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                             continue
-                                    # dct[title][layer1][layer2][0] = u_score
                                     if u_score < v2[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
                                         tmp_m_lst = []
@@ -1272,7 +1295,6 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 tmp_m_lst.append(u_mistake)
                                                 if dct[title][layer1][layer2][2] == 'none :)':
-                                                    # dct[title][layer1][layer2][2] = u_mistake
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1293,7 +1315,6 @@ def add_scores(test_raw, test_index):
                                                         subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], tmp_m_lst]})
                                                         break
                                                 else:
-                                                    # dct[title][layer1][layer2][2] += f', {u_mistake}'
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
@@ -1335,14 +1356,6 @@ def add_scores(test_raw, test_index):
                                         except ValueError:
                                             print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
                                             continue
-                                    # print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
-                                    # print(dct[title][layer1][layer2][layer3][0])
-                                    # dct[title][layer1][layer2][layer3][0] = u_score
-                                    # if dct[title][layer1][layer2][layer3][0] != 'tbd':
-                                    #     continue
-                                    # print()
-                                    # print(f'score: {u_score}')
-                                    # print(f'{dct[title][layer1][layer2][layer3]}, {layer1}, {layer2}, {layer3}')
                                     if u_score < v3[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
                                         tmp_m_lst = []
@@ -1360,7 +1373,6 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 tmp_m_lst.append(u_mistake)
                                                 if dct[title][layer1][layer2][layer3][2] == 'none :)':
-                                                    # dct[title][layer1][layer2][layer3][2] = u_mistake
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             add_m = input('Would you like to add another mistake? Y/N').lower().strip()
