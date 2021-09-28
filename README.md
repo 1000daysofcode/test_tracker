@@ -109,21 +109,62 @@ Once this is done, the entire test will be printed so the user can note the layo
 
 ### Simple Test (build_simple_dict)
 
-Lorem Ipsum
+The functions for both the simple and custom test are quite similar, so the function will be explained in detail in this section and the differences present in the custom test function will be explained in the following section.
 
-### Custom Test (build_custom_dict)
+This function is, at its core, a series of nested for loops and if conditions:
 
-## The new score function
+1) **Choosing whether to break the test into sections:** First, it checks whether the user would like to break the test into sections. If not, it prompts for the maximum score of the test and creates a simple dictionary that houses the test name (key), then a value of a placeholder actual score, maximum score and a placeholder mistake list. The function returns this as part of the output.
+
+2) **Choosing whether to break sections into subsections:** The user is again prompted to input whether they'd like to break these sections into more parts. If not, the program iterates through the list of dictionaries (adding names and score-related information as above for each subsection) and updates a blank dictionary, which is then stored as the value of the test dictionary. If the user opts not to break the section into more subsections, they are prompted to name them and choose a maximum score that applies to all sections that are not further divided.
+
+3) **Choosing whether to divide the subsections further:** The user is prompted to decide whether each section will be further divided. If none are divided further, the program iterates through all subsections and creates a dictionary (further explanation to follow). If the user chooses to divide a subsection further, they are prompted to choose how many sections there are for each section and name each of these sections. Again, the user is prompted to decide whether to divide the subsections further. If they decide not to, the user chooses a score that applies to all subsections in this subsection. If they decide to divide, the program allows for a fourth and final layer of parts.
+
+4) **Adding the final layer of subsections:** If the user opts to continue dividing into sections, they are not permitted to further divide these sections. The program will prompt for the name and maximum score of each subsection for the section, then once done append this to the list of dictionaries as noted above. If the user does not opt to do so, the program iterates through all subsections and creates a dictionary (further explanation below).
+
+> *A few notes on how the information is stored:*
+
+>Each layer of the dictionary is stored in a list of dictionaries with either a name and count of subsections or, if there are no subsections, a name, parent key name and score list.
+
+5) **Iterating through the lists to create the structure:** Either at the end of the final loop or at the end of the third/ fourth bullet point above, the function will iterate through all lists. Put simply: if there is a score in this section's value, update it to the dictionary. If not, go one level deeper and check to see whether that has a score (and the parent key matches). Do this through all three lists of dictionaries until no items remain.
+
+6) **What the function returns:** The function will return to the main function the name of the test, the maximum score possible, the number of levels of subdivision and, of course, the test dictionary.
+
+### Custom Test (build_custom_dict): the differences
+
+The main difference between the simple test function and the custom test function is that the custom test function does not apply subdivisions or maximum scores to all tests in a section. Instead, it prompts the user for whether they would like to divide for each section and subsection, as well as the maximum score for each.
+
+Other than this, the way the function loops through the inputs and the if conditions used function in much the same way. The final dictionary is also created with the same loop.
+
+## The new score functions
 
 Lorem Ipsum
 
 ## The score view function
 
-Lorem Ipsum
+This part of the program first lists the name and location of each test structure the user has entered and prompts the user to enter a choice to view. Error checking try/except statements and if conditions prevent a choice with no scores or outside the range.
+
+Once the user has made a valid choice, the program loops through the list of dictionaries, printing the index number of each, then printing as follows (in nested for loops):
+
+* If the (sub)section is further divided, only the name is printed
+* If there is a score, the name, actual score, maximum score and list of mistakes is printed
+
+The loop continues through each list item, then prompts the user to click enter in order to proceed to the next test or, if at the end of the tests, to return to the main menu.
 
 ## The score analysis function
 
-Lorem Ipsum
+Like the score view option, this function first lists the name and location of each test structure the user has entered and prompts the user to enter a choice to view. Error checking try/except statements and if conditions prevent a choice with no scores or outside the range.
+
+In much the same way as the view function, this function loops through the list of dictionaries, but instead of printing it collects the following information (in nested for loops):
+
+* If the (sub)section is further divided, search the value for score information
+* If there is score information, collect the following information:
+  * **Total test score.** This is used to update the top score, lowest score values and total score values.
+  * **Top score.** If the test score is larger than current top score, the top score is updated. If they're the same, the name is appended but score unchanged.
+  * **Low score.** If the test score is lower than current low score, the low score is updated. If they're the same, the name is appended but score unchanged.
+  * **Total score (all tests).** All test scores are added together, which is used to calculate the overall test score average.
+  * **Mistake count.** The mistakes are turned into a list of dictionaries that contain the name and count of mistakes for each mistake type. This is used to calculate the least and most common mistakes.
+
+<!-- The loop continues through each list item, then prompts the user to click enter in order to proceed to the next test or, if at the end of the tests, to return to the main menu. -->
 
 ---
 ---
