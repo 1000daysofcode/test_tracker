@@ -1,5 +1,5 @@
 import copy # Import to deep copy test structures and make new dictionaries without affecting originals
-
+# Start main function
 def main():
     choice = 'undefined'
     print('''-----------------
