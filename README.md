@@ -135,9 +135,9 @@ The main difference between the simple test function and the custom test functio
 
 Other than this, the way the function loops through the inputs and the if conditions used function in much the same way. The final dictionary is also created with the same loop.
 
-## The new score functions
+## The new score function
 
-Lorem Ipsum
+***To be completed***
 
 ## The score view function
 
@@ -164,7 +164,17 @@ In much the same way as the view function, this function loops through the list 
   * **Total score (all tests).** All test scores are added together, which is used to calculate the overall test score average.
   * **Mistake count.** The mistakes are turned into a list of dictionaries that contain the name and count of mistakes for each mistake type. This is used to calculate the least and most common mistakes.
 
-<!-- The loop continues through each list item, then prompts the user to click enter in order to proceed to the next test or, if at the end of the tests, to return to the main menu. -->
+Once the function reaches the end of the final test, in prints:
+
+1) The test name
+2) Total number of tests
+3) Maximum score possible
+4) Average score (this is the total score divided by the length of the the list of tests)
+5) The name of the test with the top score followed by the top score
+6) The name of the test with the lowest score followed by the lowest score
+7) The least and most common mistakes
+
+The program holds this window with a simple while loop until the user presses enter to return to main menu.
 
 ---
 ---
