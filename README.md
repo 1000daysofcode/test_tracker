@@ -135,9 +135,31 @@ The main difference between the simple test function and the custom test functio
 
 Other than this, the way the function loops through the inputs and the if conditions used function in much the same way. The final dictionary is also created with the same loop.
 
-## The new score function
+## The new score function (add_scores)
 
-***To be completed***
+The function that add scores iterates through the test in a similar way to the below view and analyze functions. As such, it lists the name and location of each test structure the user has entered and prompts the user to enter a choice for which to add a score. Error checking try/except statements and if conditions prevent a choice outside the range of test structures available.
+
+Once a choice has been made, this function makes of deep copy of the test structure, then iterates through each layer of the dictionary:
+
+* If the (sub)section is further divided, the name is printed so that the user understands where in the test they are.
+* If there is a score, the program gets input for the score.
+* If that score is under the maximum score, the function prompts for a minimum of one mistake type, then requests additional mistake types.
+  * The user can choose not to add more mistakes or
+  * Can continue adding mistakes until there are none remaining. In which case, the function proceeds to the next question
+* If this was a perfect score, the program will request input for the next question.
+
+Like the test structure functions, section information is stored in lists of dictionaries. In this function, there is a slight difference: there are four lists instead of three.
+
+1) First group of sections
+2) First group of subsections
+3) Second group of subsections
+4) Any final (nondivisible) parts
+
+Mistakes are stored in temporary lists in the same way that the make_mlist function stores them. Though once the user selects not to continue adding mistakes (or if there are no mistake types left), this list is then added to the score value as a joined string.
+
+Once the function has iterated through all sections and subsections, a for loop constructs the dictionary in the same way the test structure functions do. The only difference is the additional list of dictionaries.
+
+The function then returns the completed dictionary of scores and the index to which it needs to be appended. The main program will then append it to the appropriate index within the test score database.
 
 ## The score view function
 
