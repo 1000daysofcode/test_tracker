@@ -1,5 +1,8 @@
+import error_messages
+
 # BUILD A SIMPLE TEST (Less detailed input)
 def build_simple_dict(testname):
+    
     # Initialize variables
     moreLevels = 'undefined' # User chooses whether they will divide sections into more parts ('y' or 'n')
     proceed_num = 0 # Add to this variable if user chooses to divide a section into more parts
@@ -15,6 +18,7 @@ def build_simple_dict(testname):
 
     while moreLevels != False and moreLevels[0] != 'n':
         if moreLevels == 'undefined':
+            
             # Require user to choose whether they will divide the section into more parts
             while True:
                 try:
@@ -22,14 +26,15 @@ def build_simple_dict(testname):
                     if moreLevels[0] == 'y' or moreLevels[0] == 'n':
                         break
                     elif isinstance(moreLevels, str) == False:
-                        print('\n=================================\n| That is not a valid response. |\n=================================')
+                        error_messages.invalid()
                         continue
                     else:
-                        print('\n=================================\n| That is not a valid response. |\n=================================')
+                        error_messages.invalid()
                         continue
                 except IndexError:
-                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                    error_messages.invalid()
                     continue
+            
             # If the user choose to divide the section into more parts, proceed
             if moreLevels[0] == 'y':
                 numLevels += 1 # The test is divided at least one time
@@ -38,25 +43,27 @@ def build_simple_dict(testname):
                     try:
                         get_subSize1 = int(input('\nHow many identical parts? '))
                         if get_subSize1 > 10 or get_subSize1 < 1:
-                            print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                            error_messages.num_range()
                             continue
                         else:
                             break
                     except ValueError:
-                        print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                        error_messages.num_range()
                         continue
                 print(f'\nPlease enter the name(s) for the section(s)\n-----------------') 
                 names = [] # List of names that all names are appended to
+                
                 # Based on how many parts the user chose to divide into, get a name for each part
                 for i in range(get_subSize1):
                     while True:
                         subName1 = input(f'Please enter a section name for section {i+1}: ') # Name the section (from 3-20 characters in length)
                         if len(subName1) > 20 or len(subName1) <= 2:
-                            print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
+                            error_messages.name_length()
                             continue
                         else:
                             names.append(subName1)
                             break
+                
                 # Ask whether user wants to divide *all* of these sections into more sections
                 while True:
                     try:
@@ -64,24 +71,26 @@ def build_simple_dict(testname):
                         moreLevels = (input('Do you need to divide into more sections? Y/N ')).lower().strip()
                         # If user decides to divide into more parts, proceed
                         if moreLevels[0] == 'y':
-                            proceed_num += 1 # Add to the number -> this means will we create another level of sections within the previous section
+                            # Add to the number -> this means will we create another level of sections within the previous section
+                            proceed_num += 1 
                             while True:
                                 # User decides how many times to divide these sections (from 1-10 times)
                                 try:
                                     sectCount1 = int(input(f'Please enter the number of sections: '))
                                     print('-')
                                     if sectCount1 > 10 or sectCount1 < 1:
-                                        print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                        error_messages.num_range()
                                         continue
                                     else:
                                         break
                                 except ValueError:
-                                    print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                    error_messages.num_range()
                                     continue
                             # Add a list of dictionaries for each section's sections, with the number of times it is divided as 'count'
                             for name in names:
                                 subfold1.append({'name':name, 'count':sectCount1})
                             break
+                        
                         # If user decides not to divide into more parts, proceed
                         elif moreLevels[0] == 'n':
                             # Get the maximum score for each section
@@ -89,12 +98,13 @@ def build_simple_dict(testname):
                                 try:
                                     maxScore = int(input(f'What is the maximum score for each these sections? '))
                                     if maxScore < 1:
-                                        print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                        error_messages.above_1()
                                         continue
                                     else:
                                         break
                                 except ValueError:
-                                    print('\n=============================\n| Please enter only digits. |\n=============================')
+                                    error_messages.only_digits()
+                            
                             # Add a list of dictionaries with the name of the section and the score list ("actual score, maximum score, mistakes")
                             for name in names:
                                 subfold1.append({'name':name, 'score':['tbd', maxScore, 'none :)']})
@@ -102,30 +112,34 @@ def build_simple_dict(testname):
                             break
                         # Only accept numbers
                         elif isinstance(moreLevels, str) == False:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
+                            error_messages.invalid()
                             continue
                         else:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
+                            error_messages.invalid()
                             continue
                     except IndexError:
-                        print('\n=================================\n| That is not a valid response. |\n=================================')
+                        error_messages.invalid()
                         continue
+            
             # If user does not want to divide the test into parts at all, make a very simple test structure 
             else:
                 while True:
                     try:
                         maxScore = int(input(f'What is the maximum score for {testname}? ')) # Take the maximum score for this part
                         if maxScore < 1:
-                            print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                            error_messages.above_1()
                             continue
                         else:
                             break
                     except ValueError:
-                        print('\n=============================\n| Please enter only digits. |\n=============================')
-                # Create a test, add score to the test's maximum score and return the name of the test, the dictionary, it's maximum and how many layers deep the test is
+                        error_messages.only_digits()
+                
+                # Create a test, add score to the test's maximum score and return the name of the test, 
+                # the dictionary, it's maximum and how many layers deep the test is
                 test = {testname:['tbd', maxScore, 'none :)']}
                 totalMax += maxScore
                 return testname, test, totalMax, numLevels
+            
             # If a section was divided at least once more, proceed to second layer of sections
             if proceed_num > 0:
                 proceed_num = 0
@@ -137,16 +151,18 @@ def build_simple_dict(testname):
                     else:     
                         print(f'\nPlease enter the names for section "{i["name"]}"\n-----------------')
                         names = [] # List of names that all names are appended to
+                        
                         # Based on how many parts the user chose to divide into, get a name for each part
                         for j in range(i['count']):
                             while True:
                                 subName2 = input(f'Please enter the section name for section {j+1}: ')
                                 if len(subName2) > 20 or len(subName2) <= 2:
-                                    print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
+                                    error_messages.name_length()
                                     continue
                                 else:
                                     names.append(subName2)
                                     break
+                        
                         # Add a list of dictionaries for each section's sections, with the number of times it is divided as 'count'
                         while True:
                             # Require user to choose whether they will divide the section into more parts
@@ -161,17 +177,19 @@ def build_simple_dict(testname):
                                             sectCount2 = int(input(f'Please enter the number of sections: ')) 
                                             print('-')
                                             if sectCount2 > 10 or sectCount2 < 1:
-                                                print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                                error_messages.num_range()
                                                 continue
                                             else:
                                                 break
                                         except ValueError:
-                                            print('\n===================================\n| Please enter a number from 1-10. |\n====================================')
+                                            error_messages.num_range()
                                             continue
+                                    
                                     # Add a list of dictionaries for each section's sections, with the number of times it is divided as 'count'
                                     for name in names:
                                         subfold2.append({'parent':i['name'], 'name':name, 'count':sectCount2}) 
                                     break
+                                
                                 # If user decides not to divide into more parts, proceed
                                 elif moreLevels[0] == 'n':
                                     # Get the maximum score for each section
@@ -179,37 +197,43 @@ def build_simple_dict(testname):
                                         try:
                                             maxScore = int(input(f'What is the maximum score for each these sections? '))
                                             if maxScore < 1:
-                                                print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                                error_messages.above_1()
                                                 continue
                                             else:
                                                 break
                                         except ValueError:
-                                            print('\n=============================\n| Please enter only digits. |\n=============================')
-                                    # Add a list of dictionaries with the name of the section and the score list ("actual score, maximum score, mistakes")
+                                            error_messages.only_digits()
+                                    
+                                    # Add a list of dictionaries with the name of the section 
+                                    # and the score list ("actual score, maximum score, mistakes")
                                     for name in names:
                                         subfold2.append({'parent':i['name'], 'name':name, 'score':['tbd', maxScore, 'none :)']}) 
                                         totalMax += maxScore
                                     break
                                 # Only accept numbers
                                 elif isinstance(moreLevels, str) == False:
-                                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                                    error_messages.invalid()
                                     continue
                                 else:
-                                    print('\n=================================\n| That is not a valid response. |\n=================================')
+                                    error_messages.invalid()
                                     continue
                             except IndexError:
-                                print('\n=================================\n| That is not a valid response. |\n=================================')
+                                error_messages.invalid()
                                 continue
-            # If the user chose not to divide ANY section, append all sections to the main dictionary and return the name of the test, the dictionary, it's maximum and how many layers deep the test is
+            
+            # If the user chose not to divide ANY section, append all sections to the main dictionary 
+            # and return the name of the test, the dictionary, it's maximum and how many layers deep the test is
             else:
                 for layer in subfold1:
                     dict1.update({layer['name']:layer['score']})
                 test = {testname:dict1}
                 return testname, test, totalMax, numLevels
+            
             # If a section was divided at least once more, proceed to third layer of sections
             if proceed_num > 0:
                 proceed_num = 0
                 numLevels += 1 # The test is divided a third time
+                
                 # Iterate through all second sections
                 for i in subfold2:
                     if 'score' in i.keys(): # Skip all sections that contain scores, since they are not divided
@@ -217,12 +241,13 @@ def build_simple_dict(testname):
                     else:     
                         print(f'\nPlease enter the names for "{i["parent"]} - {i["name"]}"\n-----------------')
                         names = [] # List of names that all names are appended to
+                        
                         # Based on how many parts the user chose to divide into, get a name for each part
                         for j in range(i['count']):
                             while True:
                                 subName3 = input(f'Please enter the section name for section {j+1}: ')
                                 if len(subName3) > 20 or len(subName3) <= 2:
-                                    print('\n==================================================\n| Please enter a name from 3-20 characters long. |\n==================================================\n')
+                                    error_messages.name_length()
                                     continue
                                 else:
                                     names.append(subName3)
@@ -232,17 +257,21 @@ def build_simple_dict(testname):
                             try:
                                 maxScore = int(input(f'What is the maximum score for sections? '))
                                 if maxScore < 1:
-                                    print('\n==================================\n| Please enter a number above 1. |\n==================================')
+                                    error_messages.above_1()
                                     continue
                                 else:
                                     break
                             except ValueError:
-                                print('\n=============================\n| Please enter only digits. |\n=============================')
-                        # Add a list of dictionaries with the name of the section and the score list ("actual score, maximum score, mistakes")
+                                error_messages.only_digits()
+                        
+                        # Add a list of dictionaries with the name of the section 
+                        # and the score list ("actual score, maximum score, mistakes")
                         for name in names:    
                             subfold3.append({'parent':i['name'], 'name':name, 'score':['tbd', maxScore, 'none :)']})
                             totalMax += maxScore
-                # After all final sections have been added to the last list of dictionaries, iterate through ALL sections, starting with the list of main sections
+                
+                # After all final sections have been added to the last list of dictionaries, 
+                # iterate through ALL sections, starting with the list of main sections
                 for prim_f in subfold1:
                     # If the section includes more dictionaries of other sections, proceed
                     if 'score' not in prim_f.keys():

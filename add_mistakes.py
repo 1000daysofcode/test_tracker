@@ -1,5 +1,8 @@
+import error_messages
+
 # MAKE A MISTAKE LIST FOR INDEX
 def make_mlist():
+    
     # Initialize variables
     mistake_list = [] # A list of mistake types
     add_more = 'y' # Set to 'yes' to always request one mistake type minimum
@@ -25,19 +28,21 @@ def make_mlist():
                             mistakes_done = True ### CONSIDER DELETING- ARTIFACT FROM PREVIOUS VERSION
                             break
                         elif isinstance(add_more, str) == False:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
+                            error_messages.invalid()
                             continue
                         else:
-                            print('\n=================================\n| That is not a valid response. |\n=================================')
+                            error_messages.invalid()
                             continue
                     except IndexError:
-                        print('\n=================================\n| That is not a valid response. |\n=================================')
+                        error_messages.invalid()
                         continue
+    
     # Print all mistakes for user's information
     print('\nThe mistakes list is: ')
     for c, i in enumerate(mistake_list):
         print(f'Mistake {c+1}: {i}')
     print('---\n')
+    
     # Hold page until user continues
     while True:
         input('\nPress enter to continue. \n\n----------------\n')

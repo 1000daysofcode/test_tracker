@@ -1,9 +1,12 @@
 import copy
+import error_messages
+
 # ADD A NEW SCORED TEST
 def add_scores(test_raw, test_index):
     if len(test_raw) < 1:
-        print(f'\n========================================================\n| Please add at least one test score in order to view. |\n========================================================')
+        error_messages.no_struct()
     else:
+        
         # Initialize variables
         subfold1 = [] # A list of dictionaries for the first layer of sections in the test
         subfold2 = [] # A list of dictionaries for the second layer of sections in the test
@@ -11,6 +14,8 @@ def add_scores(test_raw, test_index):
         subfold4 = [] # A list of dictionaries for the final layer of sections- which can only be scores- in the test
         new_dct = {} # A dictionary that will hold all dictionaries
         dct = {} # This will be a deep copy of the index to work off
+        
+        
         print('\nHere are your test names and locations:\n')
         # Display the name and locaton of each test structure in the index. Index +1 is displayed to be user-friendly
         for c, i in enumerate(test_index):
@@ -21,15 +26,17 @@ def add_scores(test_raw, test_index):
                 test_choice = int(input('---\n\nPlease enter the location of the test you want to add a score for: '))-1
                 # User must choose from index 0 to the last number in the list
                 if test_choice > len(test_index)-1 or test_choice < 0:
-                    print(f'\n==================================\n| Please enter a number up to {len(test_index)}. |\n==================================\n')
+                    error_messages.invalid_sel(len(test_index))
                     continue
                 else:
                     break
             except ValueError:
-                print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
+                error_messages.only_digits()
                 continue
+        
         # Create a deep copy of the test structure to iterate through and add scores, mistakes to
         dct = copy.deepcopy(test_raw[test_choice])
+        
         # For first level of sections -> CHANGE this name later
         for title, v in dct.items():
             # Print the name of the section
@@ -44,33 +51,36 @@ def add_scores(test_raw, test_index):
                             # Get the score from the user from 0 to the maximum score
                             u_score = int(input(f'\nWhat was your score out of {v[1]}? '))
                             if u_score > v[1] or test_choice < 0:
-                                print(f'\n======================================\n| Please enter a number from 0 to {v[1]}. |\n======================================\n')
+                                error_messages.invalid_sel(v[1])
                                 continue
                             else:
                                 break
                         except ValueError:
-                            print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
+                            error_messages.only_digits()
                             continue
+                    
                     # If the score is less than the maximum score, require user to input at least one mistake
                     if u_score < v[1] and len(test_index[test_choice]['mistakes']) > 0:
                         add_m = 'undefined'
                         # Create a list of mistakes that the user made on this specific section
                         tmp_m_lst = []
+                        
                         # User adds the name of their mistake
                         while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                             u_mistake = input('Please enter mistakes one at a time: ').strip()
                             # Reject mistake if user did not enter it into mistake types when creating this structure
                             if u_mistake not in test_index[test_choice]['mistakes']:
-                                print('\n=====================================\n| That is not a valid mistake type. |\n=====================================\n')
+                                error_messages.invalid_mis()
                                 continue
                             # Reject mistake if mistake is already entered mistake has nothing entered
                             elif u_mistake in tmp_m_lst and u_mistake != '':
-                                print('\n==========================================\n| You have already entered that mistake. |\n==========================================\n')
+                                error_messages.redundant_mis()
                                 continue
                             # Reject mistake if mistake has nothing entered or entered the default
                             elif u_mistake == 'none :)' or u_mistake == '':
-                                print('\n===========================\n| Please enter a mistake. |\n===========================\n')
+                                error_messages.no_mis()
                                 continue
+                            
                             # If conditions are met, accept mistake and append it to the list of mistakes for this problem
                             else:
                                 tmp_m_lst.append(u_mistake)
@@ -84,13 +94,13 @@ def add_scores(test_raw, test_index):
                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                 break
                                             elif isinstance(add_m, str) == False:
-                                                print('\n=====================s============\n| That is not a valid response. |\n=================================\n')
+                                                error_messages.invalid()
                                                 continue
                                             else:
-                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                error_messages.invalid()
                                                 continue
                                         except IndexError:
-                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                            error_messages.invalid()
                                             continue
                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                     if add_m[0] == 'y':
@@ -99,6 +109,7 @@ def add_scores(test_raw, test_index):
                                     else:
                                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], ', '.join(tmp_m_lst)]})
                                         break
+                                
                                 # If at least one mistake has already been entered
                                 else:
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
@@ -109,13 +120,13 @@ def add_scores(test_raw, test_index):
                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                 break
                                             elif isinstance(add_m, str) == False:
-                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                error_messages.invalid()
                                                 continue
                                             else:
-                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                error_messages.invalid()
                                                 continue
                                         except IndexError:
-                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                            error_messages.invalid()
                                             continue
                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                     if add_m[0] == 'y':
@@ -124,21 +135,26 @@ def add_scores(test_raw, test_index):
                                     else:
                                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], ', '.join(tmp_m_lst)]})
                                         break
+                        
                         # If there are no remaining mistakes, add this section with its name and score information to the list of dictionaries 
                         else:
                             subfold1.append({'name':title, 'score':[u_score, dct[title][1], ', '.join(tmp_m_lst)]})
                             print("---\nNo remaining mistake types.\n")
+                    
                     # If there is a perfect score, add this section with its name and score information to the list of dictionaries (no need to check for mistake types)
                     elif u_score == v[1]:
                         subfold1.append({'name':title, 'score':[u_score, dct[title][1], dct[title][2]]})
+                
                 ### Diagnose this condition when refactoring- MAY BE UNNEEDED
                 else:
-                    print('\n==============================================\n| ERROR: THIS IS INVALID. CONTACT DEVELOPER. |\n==============================================\n')
+                    error_messages.UNDEFINED_ERROR()
                     pass
+            
             # If the value of the first section is a dictionary of subsections, iterate through 
             else:
                 # Append the name of the section to the first list of dictionaries
                 subfold1.append({'name':title})
+                
                 # Iterate through the first second layer of subsections
                 for layer1, v1 in dct[title].items():
                     # Print the name of the subsection
@@ -152,13 +168,14 @@ def add_scores(test_raw, test_index):
                                     # Get the score from the user from 0 to the maximum score
                                     u_score = int(input(f'\nWhat was your score out of {v1[1]}? '))
                                     if u_score > v1[1] or test_choice < 0:
-                                        print(f'\n======================================\n| Please enter a number from 0 to {v1[1]}. |\n======================================\n')
+                                        error_messages.invalid_sel(v1[1])
                                         continue
                                     else:
                                         break
                                 except ValueError:
-                                    print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
+                                    error_messages.only_digits()
                                     continue
+                            
                             # If the score is less than the maximum score, require user to input at least one mistake
                             if u_score < v1[1] and len(test_index[test_choice]['mistakes']) > 0:
                                 add_m = 'undefined'
@@ -169,16 +186,17 @@ def add_scores(test_raw, test_index):
                                     u_mistake = input('Please enter the mistakes one at a time: ').strip()
                                     # Reject mistake if user did not enter it into mistake types when creating this structure
                                     if u_mistake not in test_index[test_choice]['mistakes']:
-                                        print('\n=====================================\n| That is not a valid mistake type. |\n=====================================\n')
+                                        error_messages.invalid_mis()
                                         continue
                                     # Reject mistake if mistake is already entered mistake has nothing entered
                                     elif u_mistake in tmp_m_lst and u_mistake != '':
-                                        print('\n==========================================\n| You have already entered that mistake. |\n==========================================\n')
+                                        error_messages.redundant_mis()
                                         continue
                                     # Reject mistake if mistake has nothing entered or entered the default
                                     elif u_mistake == 'none :)' or u_mistake == '':
-                                        print('\n===========================\n| Please enter a mistake. |\n===========================\n')
+                                        error_messages.no_mis()
                                         continue
+                                    
                                     # If conditions are met, accept mistake and append it to the list of mistakes for this problem
                                     else:
                                         tmp_m_lst.append(u_mistake)
@@ -192,14 +210,15 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y' or add_m[0] == 'n':
                                                         break
                                                     elif isinstance(add_m, str) == False:
-                                                        print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                        error_messages.invalid()
                                                         continue
                                                     else:
-                                                        print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                        error_messages.invalid()
                                                         continue
                                                 except IndexError:
-                                                    print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                    error_messages.invalid()
                                                     continue
+                                            
                                             # If user wishes to proceed, continue through to add more mistake types for this section
                                             if add_m[0] == 'y':
                                                 continue
@@ -207,6 +226,7 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], ', '.join(tmp_m_lst)]})
                                                 break
+                                        
                                         # If at least one mistake has already been entered
                                         else:
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
@@ -217,13 +237,13 @@ def add_scores(test_raw, test_index):
                                                     if add_m[0] == 'y' or add_m[0] == 'n':
                                                         break
                                                     elif isinstance(add_m, str) == False:
-                                                        print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                        error_messages.invalid()
                                                         continue
                                                     else:
-                                                        print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                        error_messages.invalid()
                                                         continue
                                                 except IndexError:
-                                                    print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                    error_messages.invalid()
                                                     continue
                                             # If user wishes to proceed, continue through to add more mistake types for this section
                                             if add_m[0] == 'y':
@@ -232,10 +252,12 @@ def add_scores(test_raw, test_index):
                                             else:
                                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], ', '.join(tmp_m_lst)]})
                                                 break
+                                
                                 # If there are no remaining mistakes, add this section with its name and score information to the list of dictionaries 
                                 else:
                                     subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], ', '.join(tmp_m_lst)]})
                                     print("---\nNo remaining mistake types.\n")
+                            
                             # If there is a perfect score, add this section with its name and score information to the list of dictionaries (no need to check for mistake types)
                             elif u_score == v1[1]:
                                 subfold2.append({'parent':title, 'name':layer1, 'score':[u_score, dct[title][layer1][1], dct[title][layer1][2]]})
@@ -243,6 +265,7 @@ def add_scores(test_raw, test_index):
                         # If this not a dictionary or a list,  print the name of the subsection ### CONSIDER DELETING- THIS MAY BE AN ARTIFACT
                         else:
                             print(f'\n{layer1}') 
+                    
                     # If the value of the second section is a dictionary of subsections, iterate through 
                     else:
                         # Append the name of the section to the second list of dictionaries
@@ -260,13 +283,14 @@ def add_scores(test_raw, test_index):
                                         try:
                                             u_score = int(input(f'\nWhat was your score out of {v2[1]}? '))
                                             if u_score > v2[1] or u_score < 0:
-                                                print(f'\n======================================\n| Please enter a number from 0 to {v2[1]}. |\n======================================\n')
+                                                error_messages.invalid_sel(v2[1])
                                                 continue
                                             else:
                                                 break
                                         except ValueError:
-                                            print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
+                                            error_messages.only_digits()
                                             continue
+                                    
                                     # If the score is less than the maximum score, require user to input at least one mistake
                                     if u_score < v2[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
@@ -277,16 +301,17 @@ def add_scores(test_raw, test_index):
                                             u_mistake = input('Please enter the mistakes one at a time: ').strip()
                                             # Reject mistake if user did not enter it into mistake types when creating this structure
                                             if u_mistake not in test_index[test_choice]['mistakes']:
-                                                print('\n=====================================\n| That is not a valid mistake type. |\n=====================================\n')
+                                                error_messages.invalid_mis()
                                                 continue
                                             # Reject mistake if mistake is already entered mistake has nothing entered
                                             elif u_mistake in tmp_m_lst and u_mistake != '':
-                                                print('\n==========================================\n| You have already entered that mistake. |\n==========================================\n')
+                                                error_messages.redundant_mis()
                                                 continue
                                             # Reject mistake if mistake has nothing entered or entered the default
                                             elif u_mistake == 'none :)' or u_mistake == '':
-                                                print('\n===========================\n| Please enter a mistake. |\n===========================\n')
+                                                error_messages.no_mis()
                                                 continue
+                                            
                                             # If conditions are met, accept mistake and append it to the list of mistakes for this problem
                                             else:
                                                 tmp_m_lst.append(u_mistake)
@@ -300,14 +325,15 @@ def add_scores(test_raw, test_index):
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
                                                             elif isinstance(add_m, str) == False:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                             else:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                         except IndexError:
-                                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                            error_messages.invalid()
                                                             continue
+                                                    
                                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                                     if add_m[0] == 'y':
                                                         continue
@@ -315,6 +341,7 @@ def add_scores(test_raw, test_index):
                                                     else:
                                                         subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], ', '.join(tmp_m_lst)]})
                                                         break
+                                                
                                                 # If at least one mistake has already been entered
                                                 else:
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
@@ -323,14 +350,15 @@ def add_scores(test_raw, test_index):
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
                                                             elif isinstance(add_m, str) == False:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                             else:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                         except IndexError:
-                                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                            error_messages.invalid()
                                                             continue
+                                                    
                                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                                     if add_m[0] == 'y':
                                                         continue
@@ -338,6 +366,7 @@ def add_scores(test_raw, test_index):
                                                     else:
                                                         subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], ', '.join(tmp_m_lst)]})
                                                         break
+                                        
                                         # If there are no remaining mistakes, add this section with its name and score information to the list of dictionaries 
                                         else:
                                             subfold3.append({'parent':layer1, 'name':layer2, 'score':[u_score, dct[title][layer1][layer2][1], ', '.join(tmp_m_lst)]})
@@ -348,6 +377,7 @@ def add_scores(test_raw, test_index):
                                 # If this not a dictionary or a list,  print the name of the subsection ### CONSIDER DELETING- THIS MAY BE AN ARTIFACT
                                 else:
                                     print('\n' + layer2 + " : " + str(dct[title][layer1][layer2]))
+                            
                             # If the value of the third section is a dictionary of subsections, iterate through 
                             else:
                                 # Append the name of the section to the third list of dictionaries
@@ -362,13 +392,14 @@ def add_scores(test_raw, test_index):
                                         try:
                                             u_score = int(input(f'\nWhat was your score out of {v3[1]}? '))
                                             if u_score > v3[1] or test_choice < 0:
-                                                print(f'\n======================================\n| Please enter a number from 0 to {v3[1]}. |\n======================================\n')
+                                                error_messages.invalid_sel(v3[1])
                                                 continue
                                             else:
                                                 break
                                         except ValueError:
-                                            print(f'\n=====================================\n| Please enter a number digit only. |\n=====================================\n')
+                                            error_messages.only_digits()
                                             continue
+                                    
                                     # If the score is less than the maximum score, require user to input at least one mistake
                                     if u_score < v3[1] and len(test_index[test_choice]['mistakes']) > 0:
                                         add_m = 'undefined'
@@ -379,16 +410,17 @@ def add_scores(test_raw, test_index):
                                             u_mistake = input('Please enter the mistakes one at a time: ').strip()
                                             # Reject mistake if user did not enter it into mistake types when creating this structure
                                             if u_mistake not in test_index[test_choice]['mistakes']:
-                                                print('\n=====================================\n| That is not a valid mistake type. |\n=====================================\n')
+                                                error_messages.invalid_mis()
                                                 continue
                                             # Reject mistake if mistake is already entered mistake has nothing entered
                                             elif u_mistake in tmp_m_lst and u_mistake != '':
-                                                print('\n==========================================\n| You have already entered that mistake. |\n==========================================\n')
+                                                error_messages.redundant_mis()
                                                 continue
                                             # If conditions are met, accept mistake and append it to the list of mistakes for this problem
                                             elif u_mistake == 'none :)' or u_mistake == '':
-                                                print('\n===========================\n| Please enter a mistake. |\n===========================\n')
+                                                error_messages.no_mis()
                                                 continue
+                                            
                                             # If conditions are met, accept mistake and append it to the list of mistakes for this problem
                                             else:
                                                 tmp_m_lst.append(u_mistake)
@@ -402,14 +434,15 @@ def add_scores(test_raw, test_index):
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
                                                             elif isinstance(add_m, str) == False:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                             else:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                         except IndexError:
-                                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                            error_messages.invalid()
                                                             continue
+                                                    
                                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                                     if add_m[0] == 'y':
                                                         continue
@@ -417,6 +450,7 @@ def add_scores(test_raw, test_index):
                                                     else:
                                                         subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], ', '.join(tmp_m_lst)]})
                                                         break
+                                                
                                                 # If at least one mistake has already been entered
                                                 else:
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
@@ -427,14 +461,15 @@ def add_scores(test_raw, test_index):
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
                                                             elif isinstance(add_m, str) == False:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                             else:
-                                                                print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                                error_messages.invalid()
                                                                 continue
                                                         except IndexError:
-                                                            print('\n=================================\n| That is not a valid response. |\n=================================\n')
+                                                            error_messages.invalid()
                                                             continue
+                                                    
                                                     # If user wishes to proceed, continue through to add more mistake types for this section
                                                     if add_m[0] == 'y':
                                                         continue
@@ -442,6 +477,7 @@ def add_scores(test_raw, test_index):
                                                     else:
                                                         subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], ', '.join(tmp_m_lst)]})
                                                         break
+                                        
                                         # If there are no remaining mistakes, add this section with its name and score information to the list of dictionaries 
                                         else:
                                             subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], ', '.join(tmp_m_lst)]})
@@ -449,11 +485,14 @@ def add_scores(test_raw, test_index):
                                     # If there is a perfect score, add this section with its name and score information to the list of dictionaries (no need to check for mistake types)
                                     elif u_score == v3[1]:
                                         subfold4.append({'gparent':layer1, 'parent':layer2, 'name':layer3, 'score':[u_score, dct[title][layer1][layer2][layer3][1], dct[title][layer1][layer2][layer3][2]]})
+                    
                     # Divide each main section with a line
                     print('----------------') 
                 # Print a thick line once all information has been input
                 print('\n\n================')
+                
                 ## print(f'\n{subfold1}\n\n{subfold2}\n\n{subfold3}\n\n{subfold4}') ## This is for error checking
+            
             # After all final sections have been added to the last list of dictionaries, iterate through ALL sections, starting with the list of main sections
             for prim_f in subfold1:
                 # If the section includes more dictionaries of other sections, proceed
@@ -501,6 +540,7 @@ def add_scores(test_raw, test_index):
                 # If the section has no sections, add that section and its score set to the second dictionary
                 else:
                     new_dct.update({prim_f['name']:prim_f['score']})
+            
             # Create the test dictionary with the test name as the main key, then return the name of the test, the dictionary, it's maximum and how many layers deep the test is
             dct = {test_index[test_choice]['name']:new_dct}
             print('\nScores successfully added. Returning to menu.')
