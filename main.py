@@ -3,7 +3,7 @@ from view_tests import view
 from add_score import add_scores
 from analyze_score import analyze
 from add_mistakes import make_mlist
-from create_structure import make_test_shell, print_preview
+from create_structure import make_test_shell
 
 
 # Start main function
@@ -11,31 +11,24 @@ def main_loop():
     choice = 'undefined'
     display_welcome()
 
-    # Ask for name (add to variable)
     name = input('\n\nWelcome to Test Tracker! Please enter your name: ')
-    # Greet user
     print(f'\nWelcome, {name}!\n\nPlease create at least one test structure to continue.')
 
-    # Initialize data structures
     test_raw = [] # Test structures
     test_db = [] # Test scores
     test_index = [] # Test name, location in raw/db and mistake lists
 
-    # Main loop runs until users quit by pressing 'q'
-    while choice != False and choice[0] != 'q':
+    while choice != False and choice[0] != 'q': # Quit by pressing 'q'
         
         if choice == 'undefined':
             while True:
                 try:
                     choice = menu_selection()
-                    # Only accept the options in the menu
-                    if choice[0] == 'v' or choice[0] == 'a' or choice[0] == 'n' or choice[0] == 's' or choice[0] == 'q':
+                    if valid_choice(choice):
                         break
-                    # If input is not a string, reject input
                     elif isinstance(choice, str) == False:
                         error_messages.invalid()
                         continue
-                   # If the first letter is anything else aside from one of the letters, reject input
                     else:
                         error_messages.invalid()
                         continue
@@ -45,102 +38,70 @@ def main_loop():
             
             # VIEW TESTS
             if choice[0] == 'v':
-                # Reject this choice if there are no test structures
                 if len(test_raw) < 1 or len(test_index) < 1:
-                    error_messages.no_scores()
+                    error_messages.no_scores() # if there are no test structures
                     choice = 'undefined'
                     continue
                 
                 else:
-                    print('\nHere are your test names and locations:\n')
-                    # Display the name and locaton of each test structure in the index. Index +1 is displayed to be user-friendly
-                    for c, i in enumerate(test_index):
-                        print(f'Test structure: {i["name"]} || Test location: {c+1}')
-                    while True:
-                        try:
-                            # User chooses test to view
-                            test_choice = int(input('---\n\nPlease enter the location of your tests:\n-> Enter "q" to return to main menu\n---\n'))-1
-                            # User must choose from index 0 to the last number in the list
-                            if test_choice > len(test_index) or test_choice < 0:
-                                error_messages.invalid_sel(len(test_index)+1)
-                                continue
-                            # Reject input if there is no score yet added for this test
-                            elif test_db[test_choice] == []:
-                                error_messages.no_scores2()
-                                continue
-                            else:
-                                # Accept input and break if all conditions are met
-                                break
-                        except:
-                            # If input throws an error, remind user only to enter numbers, return to main menu in case input was 'q'
-                            error_messages.letter_error()
-                            break
-                    
-                    #Choose all tests in database at the location the user chose
+                    test_choice = get_test_choice(test_index, test_db)
                     try:
                         tests = test_db[test_choice]
                         print(f'\nBelow are all test results for test "{test_index[test_choice-1]["name"]}:"\n================\n')
-                        view(tests) 
+                        
+                        for c, dct in enumerate(tests):
+                            print(f'Test #{c+1}\n----------------')
+                            view(dct)
+                            print('\n\n================') # Print between tests
+                            wait_for_user()
                     except IndexError:
                         print('\n-> Returning to main menu')
                         choice = 'undefined'
                         continue
-                    # Reset choice to undefined and continue through the main loop
                     choice = 'undefined'
                     continue
             
             # ANALYZE TEST RESULTS
             elif choice[0] == 'a':
-                # Reject this choice if there are no test scores 
-                if len(test_db) < 1 or len(test_index) < 1:
+                if len(test_db) < 1 or len(test_index) < 1: # If there are no test scores 
                     error_messages.no_scores()
                     choice = 'undefined'
                     continue
                 else:
-                    # Call analyze function with database and test index as parameters
                     analyze(test_db, test_index)
-                    # After function completes, reset choice to undefined and continue through the main loop
                     choice = 'undefined'
                     continue
             
             # ADD NEW TEST SCORES
             elif choice[0] == 'n':
-                # Reject this choice if there are no test structures
-                if len(test_raw) < 1 or len(test_index) < 1:
+                if len(test_raw) < 1 or len(test_index) < 1: # If there are no test structures
                     error_messages.no_struct()
                     choice = 'undefined'
                     continue
                 else:
-                    # Call function to add new scores, pass the raw tests and test index as parameters
                     index, scores = add_scores(test_raw, test_index)
-                    # Append new test to the to database at the correct index
                     test_db[index].append(scores)
-                    # print(test_db) ### CONSIDER DELETING THIS PRINT STATEMENT
-                    # After function completes, reset choice to undefined and continue through the main loop
                     choice = 'undefined'
                     continue
             
             # ADD NEW TEST STRUCTURE
             elif choice[0] == 's':
-                # Call function to make new test structure
-                # 'testname't is the test's name, 'dct' is the structure, 'total' is the total possible score and 'levels' is the how many layers are in the score up to 4
+                # 'dct' is the structure, 'total' is the total possible score and 'levels' is the how many layers
                 testname, dct, total, levels = make_test_shell()
-                # Add a new space into the database to store all scores of this test type
-                test_db.append([])
-                # Add test structure to the list of test structures
-                test_raw.append(dct)
-                # Add spot on test index with information for analysis
-                test_index.append({'name':testname, 'maxscore':total, 'mistakes':make_mlist()})
-                # Print completed structure so user understands results
-                print(f'\nTest "{testname}" created. Please see below:\n')
-                print_preview(dct)
+
+                test_db.append([]) # Add a new space into the database
+                test_raw.append(dct) # Add test structure to the list
+                test_index.append({'name':testname, 'maxscore':total, 'mistakes':make_mlist()}) # Add spot on test index 
+            
+                print(f'\nTest "{testname}" created. Please see below:\n') # Print completed structure
+                view(dct)
                 while True:
                     input('\nPress enter to continue.\n----------------\n')
                     break
                 choice = 'undefined'
                 continue
-            # When user closes app with 'q', close app.
-            else:
+            
+            else: # Close app if 'q'
                 display_goodbye()
                 choice = False
 
@@ -177,6 +138,41 @@ def menu_selection():
     ===============================================
 
 Enter an option: ''')).lower().strip()
+
+
+def valid_choice(choice):
+    return choice[0] == 'v' or choice[0] == 'a' or choice[0] == 'n' or choice[0] == 's' or choice[0] == 'q'
+
+
+def get_test_choice(test_index, test_db):
+    test_choice = -1
+    
+    print('\nHere are your test names and locations:\n')
+    for c, i in enumerate(test_index):
+        print(f'Test structure: {i["name"]} || Test location: {c+1}') # Index +1 is displayed
+    
+    while True:
+        try:
+            test_choice = int(input('---\n\nPlease enter the location of your tests:\n-> Enter "q" to return to main menu\n---\n'))-1
+            if test_choice > len(test_index) or test_choice < 0:
+                error_messages.invalid_sel(len(test_index)+1)
+                continue
+            elif test_db[test_choice] == []:
+                error_messages.no_scores2() # if no score yet added for this test
+                continue
+            else:
+                break # if all conditions are met
+        except:
+            error_messages.letter_error() # only enter numbers
+            break
+
+    return test_choice
+
+
+def wait_for_user():
+    while True: 
+            input('\nYour tests are above.\n\nPress enter to continue. \n\n----------------\n')
+            break # Stop between each test and wait for user
 
 
 def display_goodbye():

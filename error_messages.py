@@ -17,9 +17,11 @@ def no_scores2():
 def no_struct():
     print(f'\n============================================================\n| Please add at least one test structure in order to view. |\n============================================================')
 
+
 # Errors in test analysis
 def no_scores3():
     print(f'\n===================================================\n| There are not yet any scores for this test type |\n===================================================')
+
 
 # Errors in structure builders
 def above_1():
@@ -33,6 +35,7 @@ def num_range():
 
 def only_digits():
     print('\n=============================\n| Please enter only digits. |\n=============================')
+
 
 # Errors in score adder
 def invalid_mis():

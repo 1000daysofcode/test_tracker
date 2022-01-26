@@ -89,7 +89,7 @@ def add_scores(test_raw, test_index):
                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']): # Until not all mistakes have been entered
                                         # Check if user wants to proceed to add more mistakes
                                         try:
-                                            add_m = input('Would you like to add another mistake? Y/N').lower().strip()
+                                            add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
                                             # Only accept 'y' or 'n' as input
                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                 break
@@ -205,7 +205,7 @@ def add_scores(test_raw, test_index):
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 # Check if user wants to proceed to add more mistakes
                                                 try:
-                                                    add_m = input('Would you like to add another mistake? Y/N').lower().strip()
+                                                    add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
                                                     # Only accept 'y' or 'n' as input
                                                     if add_m[0] == 'y' or add_m[0] == 'n':
                                                         break
@@ -232,7 +232,7 @@ def add_scores(test_raw, test_index):
                                             while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                 try:
                                                     # Check if user wants to proceed to add more mistakes
-                                                    add_m = input('Would you like to add another mistake? Y/N').lower().strip()
+                                                    add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
                                                     # Only accept 'y' or 'n' as input
                                                     if add_m[0] == 'y' or add_m[0] == 'n':
                                                         break
@@ -429,7 +429,7 @@ def add_scores(test_raw, test_index):
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         # Check if user wants to proceed to add more mistakes
                                                         try:
-                                                            add_m = input('Would you like to add another mistake? Y/N').lower().strip()
+                                                            add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
                                                             # Only accept 'y' or 'n' as input
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
@@ -456,7 +456,7 @@ def add_scores(test_raw, test_index):
                                                     while True and len(tmp_m_lst) != len(test_index[test_choice]['mistakes']):
                                                         try:
                                                             # Check if user wants to proceed to add more mistakes
-                                                            add_m = input('Would you like to add another mistake? Y/N').lower().strip()
+                                                            add_m = input('Would you like to add another mistake? Y/N ').lower().strip()
                                                             # Only accept 'y' or 'n' as input
                                                             if add_m[0] == 'y' or add_m[0] == 'n':
                                                                 break
