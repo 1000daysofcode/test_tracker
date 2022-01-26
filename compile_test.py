@@ -81,6 +81,7 @@ def max_layer_test(testname, test_max_score, num_of_levels, subsection1_dicts, s
                     dict2.update({second_sect['name']:second_sect['score']})
                 else:
                     continue
+            
             # Once all relevant sections are added to the the second dictionary, update the main dictionary
             test_dict.update({first_sect['name']:dict2})
         
@@ -90,3 +91,53 @@ def max_layer_test(testname, test_max_score, num_of_levels, subsection1_dicts, s
 
     test = {testname:test_dict}
     return testname, test, test_max_score, num_of_levels
+
+
+def compile_test_scores(scores_dct, subsection1, subsection2, subsection3, subsection4):
+    for first_sect in subsection1:
+        if 'score' not in first_sect.keys(): # If the section includes more sections
+            dict2 = {}
+            for second_sect in subsection2:
+                
+                if 'score' not in second_sect.keys(): # If the section includes more sections
+                    if second_sect['parent'] == first_sect['name']:
+                        dict3 = {}
+                        for third_sect in subsection3: 
+
+                            if 'score' not in third_sect.keys(): # If the section includes more sections
+                                if third_sect['parent'] == second_sect['name']:
+                                    dict4 = {}
+                                    for fourth_sect in subsection4:
+                                        
+                                        if fourth_sect['gparent'] == third_sect['parent'] == second_sect['name']:
+                                            dict4.update({fourth_sect['name']:fourth_sect['score']})
+                                        else:
+                                            pass
+                                   
+                                    # Once all relevant sections are added to the the fourth dictionary, update the third dictionary
+                                    dict3.update({third_sect['name']:dict4})
+                                else:    
+                                    continue
+                            
+                            # If the section has no sections, add that section and its score set to the third dictionary
+                            elif third_sect['parent'] == second_sect['name']:
+                                dict3.update({third_sect['name']:third_sect['score']})
+                        
+                        # Once all relevant sections are added to the the third dictionary, update the second dictionary
+                        dict2.update({second_sect['name']:dict3})
+                    else:
+                        continue
+                
+                # If the section has no sections, add that section and its score set to the second dictionary
+                elif second_sect['parent'] == first_sect['name']:
+                    dict2.update({second_sect['name']:second_sect['score']})
+                else:
+                    continue
+            
+            # Once all relevant sections are added to the the second dictionary, update the main dictionary
+            scores_dct.update({first_sect['name']:dict2})
+        
+        else: # If no sections
+            scores_dct.update({first_sect['name']:first_sect['score']})
+    
+    return scores_dct
