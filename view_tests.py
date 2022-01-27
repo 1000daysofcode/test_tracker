@@ -11,6 +11,7 @@ def view(dct):
         
         else: # If the value of the subsection is a dictionary, print remainder of test
             for section2_name, section2_values in dct[section1_name].items():
+                print(f'{section2_name}')
                 if isinstance(dct[section1_name][section2_name], dict) != True:
                     next_section = section2_values
                     if isinstance(next_section, list) == True:

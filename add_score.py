@@ -207,10 +207,10 @@ def add_scores(test_raw, test_index):
             new_scores_dct = make_test(scores_dct, subsection1, subsection2, subsection3, subsection4)
             scores_dct = new_scores_dct
             
-            # Create the test dictionary with the test name as the main key, then return the name of the test, the dictionary, it's maximum and how many layers deep the test is
             test_copy = {test_index[test_choice]['name']:scores_dct}
             print('\nScores successfully added. Returning to menu.')
             return test_choice, test_copy 
+
 
 def get_test_choice(num):
     while True:
@@ -230,8 +230,7 @@ def get_test_choice(num):
 
 def get_actual_score(num, test_choice):
     while True:
-        try:
-            # Get the score from the user from 0 to the maximum score
+        try: # Get the score from the user from 0 to the maximum score
             actual_score = int(input(f'\nWhat was your score out of {num}? '))
             if actual_score > num or test_choice < 0:
                 error_messages.invalid_sel(num)
@@ -244,13 +243,18 @@ def get_actual_score(num, test_choice):
     
     return actual_score
 
+
 def add_more_mistakes(tmp_mistake_list_len, mistake_list_len):                              
-    
+    if tmp_mistake_list_len == mistake_list_len:
+        do_not_cont = 'n'
+        return do_not_cont
+
     while True and tmp_mistake_list_len != mistake_list_len: # As long as list not full
         try: # If user wants to add more mistakes
             add_more = input('Would you like to add another mistake? Y/N ').lower().strip()
             if add_more[0] == 'y' or add_more[0] == 'n': 
                 return add_more # Only accept 'y' or 'n' as input
+            
             elif isinstance(add_more, str) == False:
                 error_messages.invalid()
                 continue
@@ -260,6 +264,7 @@ def add_more_mistakes(tmp_mistake_list_len, mistake_list_len):
         except IndexError:
             error_messages.invalid()
             continue
+
 
 def valid_mistake_choice(mistake_name, tmp_mistake_list, mistake_list):
     if mistake_name not in mistake_list:

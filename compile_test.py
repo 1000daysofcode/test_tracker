@@ -1,5 +1,6 @@
 import error_messages
 
+
 def single_part_test(testname, test_max_score, num_of_levels):
     while True:
         try:
@@ -12,11 +13,10 @@ def single_part_test(testname, test_max_score, num_of_levels):
         except ValueError:
             error_messages.only_digits()
     
-    # Create a test and return results for main function
     test = {testname:['tbd', sect_part_score, 'none :)']}
     test_max_score = sect_part_score
     
-    return testname, test, test_max_score, num_of_levels
+    return testname, test, test_max_score, num_of_levels # Return results for main function
 
 
 def two_layer_test(testname, test_max_score, num_of_levels, subsection1_dicts, test_dict):
@@ -35,17 +35,14 @@ def three_layer_test(testname, test_max_score, num_of_levels, subsection1_dicts,
             dict2 = {}
             for second_sect in subsection2_dicts:
                 
-                # If the subsection has the right parent folder, update a second dictionary of sections
-                if second_sect['parent'] == first_sect['name']: 
+                if second_sect['parent'] == first_sect['name']: # If the subsection has the right parent folder
                     dict2.update({second_sect['name']:second_sect['score']})
                 else:
                     continue
             
-            # Once all relevant sections are added to the the second dictionary, update the main dictionary
-            test_dict.update({first_sect['name']:dict2})
+            test_dict.update({first_sect['name']:dict2}) # Update main dict after subsections added to second dict
         
-        # If the section has no sections, add that section and its score set to the main dictionary
-        else:
+        else: # If no sections, add section and score set to main dict
             test_dict.update({first_sect['name']:first_sect['score']})
 
     test = {testname:test_dict}
@@ -61,32 +58,27 @@ def max_layer_test(testname, test_max_score, num_of_levels, subsection1_dicts, s
             for second_sect in subsection2_dicts:
                 
                 if 'score' not in second_sect.keys(): # If the section includes more sections
-                    if second_sect['parent'] == first_sect['name']:
+                    if second_sect['parent'] == first_sect['name']: # If the subsection has the right parent folder
                         dict3 = {}
                         for third_sect in subsection3_dicts:
                             
-                            # If the subsection has the right parent folder, update a third dictionary of sections
-                            if third_sect['parent'] == second_sect['name']:
+                            if third_sect['parent'] == second_sect['name']: # If the subsection has the right parent folder
                                 dict3.update({third_sect['name']:third_sect['score']})
                             else:
                                 continue
                         
-                        # Once all relevant sections are added to the the third dictionary, update the second dictionary
-                        dict2.update({second_sect['name']:dict3})
+                        dict2.update({second_sect['name']:dict3}) # Update second dict after subsections added to third dict
                     else:
                         continue
                 
-                # If no sections, add that section and its score set to the second dictionary
-                elif second_sect['parent'] == first_sect['name']:
+                elif second_sect['parent'] == first_sect['name']: # If no sections, add section and score set to second dict
                     dict2.update({second_sect['name']:second_sect['score']})
                 else:
                     continue
             
-            # Once all relevant sections are added to the the second dictionary, update the main dictionary
-            test_dict.update({first_sect['name']:dict2})
+            test_dict.update({first_sect['name']:dict2}) # Update main dict after subsections added to second dict
         
-        # If the section has no sections, add that section and its score set to the second dictionary
-        else:
+        else: # If no sections, add section and score set to main dict
             test_dict.update({first_sect['name']:first_sect['score']})
 
     test = {testname:test_dict}
@@ -100,44 +92,39 @@ def compile_test_scores(scores_dct, subsection1, subsection2, subsection3, subse
             for second_sect in subsection2:
                 
                 if 'score' not in second_sect.keys(): # If the section includes more sections
-                    if second_sect['parent'] == first_sect['name']:
+                    if second_sect['parent'] == first_sect['name']: # If the subsection has the right parent folder
                         dict3 = {}
                         for third_sect in subsection3: 
 
                             if 'score' not in third_sect.keys(): # If the section includes more sections
-                                if third_sect['parent'] == second_sect['name']:
+                                if third_sect['parent'] == second_sect['name']: # If the subsection has the right parent folder
                                     dict4 = {}
                                     for fourth_sect in subsection4:
                                         
-                                        if fourth_sect['gparent'] == third_sect['parent'] == second_sect['name']:
+                                        if fourth_sect['gparent'] == third_sect['parent'] == second_sect['name']: # If the subsection has the right parent folder
                                             dict4.update({fourth_sect['name']:fourth_sect['score']})
                                         else:
                                             pass
                                    
-                                    # Once all relevant sections are added to the the fourth dictionary, update the third dictionary
-                                    dict3.update({third_sect['name']:dict4})
+                                    dict3.update({third_sect['name']:dict4}) # Update third dict after subsections added to fourth dict
                                 else:    
                                     continue
                             
-                            # If the section has no sections, add that section and its score set to the third dictionary
-                            elif third_sect['parent'] == second_sect['name']:
+                            elif third_sect['parent'] == second_sect['name']:  # If no sections, add section and score set to third dict
                                 dict3.update({third_sect['name']:third_sect['score']})
                         
-                        # Once all relevant sections are added to the the third dictionary, update the second dictionary
-                        dict2.update({second_sect['name']:dict3})
+                        dict2.update({second_sect['name']:dict3}) # Update second dict after subsections added to third dict
                     else:
                         continue
                 
-                # If the section has no sections, add that section and its score set to the second dictionary
-                elif second_sect['parent'] == first_sect['name']:
+                elif second_sect['parent'] == first_sect['name']: # If no sections, add section and score set to second dict
                     dict2.update({second_sect['name']:second_sect['score']})
                 else:
                     continue
             
-            # Once all relevant sections are added to the the second dictionary, update the main dictionary
-            scores_dct.update({first_sect['name']:dict2})
+            scores_dct.update({first_sect['name']:dict2}) # Update main dict after subsections added to second dict
         
-        else: # If no sections
+        else: # If no sections, add section and score set to main dict
             scores_dct.update({first_sect['name']:first_sect['score']})
     
     return scores_dct

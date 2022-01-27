@@ -12,9 +12,6 @@ def build_custom_dict(testname):
     num_times_to_proceed = 0
     make_more_levels = 'undefined'
     
-    # sectCount1 = 0 # The number of parts a section is divided into
-    # sectCount2 = 0 # The number of parts a section is divided into
-    
     subsection1_dicts = []
     subsection2_dicts = []
     subsection3_dicts = []

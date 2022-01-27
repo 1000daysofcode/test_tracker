@@ -48,6 +48,7 @@ def analyze(test_db, test_index):
         print_mistakes_tally(tmp_mlist, tally)
         wait_for_user()
 
+
 def get_test_choice(test_db, test_index):
     test_choice = -1
     while True:
@@ -66,6 +67,7 @@ def get_test_choice(test_db, test_index):
             error_messages.letter_error()
             to_menu = -1
             return to_menu 
+
 
 def sum_scores_and_mistakes(tests, mistake_list):
     overall_score = 0
@@ -152,6 +154,7 @@ def sum_scores_and_mistakes(tests, mistake_list):
 
     return overall_score, top_name, top_score, low_name, low_score, mistake_list
 
+
 def print_main_analysis(name, num_tests, max_score, avg_score, top_name, top_score, low_name, low_score):
     print(f'''
     =====================================
@@ -170,6 +173,7 @@ def print_main_analysis(name, num_tests, max_score, avg_score, top_name, top_sco
     |===================================|
     |         Mistakes Rankings         |
     |-----------------------------------|''')
+
 
 def print_mistakes_tally(tmp_mlist, tally):
     if len(tmp_mlist) >= 6: 
@@ -197,6 +201,7 @@ def print_mistakes_tally(tmp_mlist, tally):
             print(f"    |\t{mistake['name']}: {mistake['count']} times")
 
     print('    =====================================\n')
+
 
 def wait_for_user():
     while True:

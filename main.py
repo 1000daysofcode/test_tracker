@@ -19,22 +19,8 @@ def main_loop():
     test_index = [] # Test name, location in raw/db and mistake lists
 
     while choice != False and choice[0] != 'q': # Quit by pressing 'q'
-        
         if choice == 'undefined':
-            while True:
-                try:
-                    choice = menu_selection()
-                    if valid_choice(choice):
-                        break
-                    elif isinstance(choice, str) == False:
-                        error_messages.invalid()
-                        continue
-                    else:
-                        error_messages.invalid()
-                        continue
-                except IndexError:
-                    error_messages.invalid()
-                    continue
+            choice = make_choice()
             
             # VIEW TESTS
             if choice[0] == 'v':
@@ -138,6 +124,23 @@ def menu_selection():
     ===============================================
 
 Enter an option: ''')).lower().strip()
+
+
+def make_choice():
+    while True:
+        try:
+            choice = menu_selection()
+            if valid_choice(choice):
+                return choice
+            elif isinstance(choice, str) == False:
+                error_messages.invalid()
+                continue
+            else:
+                error_messages.invalid()
+                continue
+        except IndexError:
+            error_messages.invalid()
+            continue
 
 
 def valid_choice(choice):
